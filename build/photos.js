@@ -1,7 +1,8 @@
-/* Crop originals into site/img/. */
+/* Crop originals into site/img/. Never enlarge — the archive is 1024px and smaller. */
 const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
+const { faviconSvg, markSvg, ogSvg } = require('./logo');
 
 const ROOT = path.resolve(__dirname, '..');
 const SITE = path.join(ROOT, 'site');
@@ -11,7 +12,7 @@ const ORIG = path.join(__dirname, 'originals');
 fs.mkdirSync(ORIG, { recursive: true });
 fs.mkdirSync(IMG, { recursive: true });
 
-const JPEG = { quality: 78, mozjpeg: true, chromaSubsampling: '4:4:4' };
+const JPEG = { quality: 82, mozjpeg: true, chromaSubsampling: '4:4:4' };
 const open = (f) => sharp(f).rotate();
 const source = (name) => {
   const p = path.join(ORIG, name);
@@ -19,89 +20,94 @@ const source = (name) => {
 };
 const kb = (f) => Math.round(fs.statSync(f).size / 1024);
 
+function brandedShare() {
+  fs.writeFileSync(path.join(SITE, 'favicon.svg'), faviconSvg());
+  const og = Buffer.from(ogSvg());
+  const mark = Buffer.from(markSvg(180));
+  return Promise.all([
+    sharp(og).jpeg({ quality: 88, mozjpeg: true }).toFile(path.join(IMG, 'og.jpg')).then(() => ['og.jpg', '1200x630']),
+    sharp(mark).png({ compressionLevel: 9 }).toFile(path.join(SITE, 'apple-touch-icon.png')).then(() => ['apple-touch-icon.png', '180x180']),
+    sharp(mark).resize(32, 32).png({ compressionLevel: 9 }).toFile(path.join(SITE, 'favicon-32.png')).then(() => ['favicon-32.png', '32x32']),
+    Promise.resolve(['favicon.svg', 'vector']),
+  ]);
+}
+
+function pruneStale() {
+  const stale = [
+    'logo.png',
+    'about.jpg', 'yard.jpg', 'hall.jpg',
+    'hero-wide.jpg', 'hero-tall.jpg',
+    'hero2-wide.jpg', 'hero2-tall.jpg',
+    'hero3-wide.jpg', 'hero3-tall.jpg',
+    'fleet-1.jpg', 'fleet-2.jpg', 'fleet-3.jpg', 'fleet-4.jpg',
+  ];
+  let n = 0;
+  const re = (base) => new RegExp(`^${base.replace(/[.*+?^$()|[\]\\]/g, '\\$&')}-\\d+\\.(webp|jpe?g)$`, 'i');
+  const names = fs.readdirSync(IMG);
+  for (const file of stale) {
+    const abs = path.join(IMG, file);
+    if (fs.existsSync(abs)) {
+      fs.unlinkSync(abs);
+      n++;
+    }
+    const base = file.replace(/\.jpe?g$/i, '').replace(/\.png$/i, '');
+    const rx = re(base);
+    names.forEach((f) => {
+      if (rx.test(f)) {
+        fs.unlinkSync(path.join(IMG, f));
+        n++;
+      }
+    });
+  }
+  return n;
+}
+
 (async () => {
   const jobs = [];
-
-  const HEROES = [
-    { src: 'letadlo1.jpg', slug: 'hero' },
-    { src: 'letadlo2.jpg', slug: 'hero2' },
-    { src: 'hala_index.jpg', slug: 'hero3' },
+  const GALLERY = [
+    { src: 'letadlo1.jpg', out: 'gallery-1.jpg' },
+    { src: 'letadlo2.jpg', out: 'gallery-2.jpg' },
+    { src: 'letadlo3.jpg', out: 'gallery-3.jpg' },
+    { src: 'letadlo4.jpg', out: 'gallery-4.jpg' },
+    { src: 'hala1.jpg', out: 'gallery-5.jpg' },
+    { src: 'hala2.jpg', out: 'gallery-6.jpg' },
+    { src: 'auta1.jpg', out: 'gallery-7.jpg' },
+    { src: 'auta2.jpg', out: 'gallery-8.jpg' },
+    { src: 'auta3.jpg', out: 'gallery-9.jpg' },
+    { src: 'auta4.jpg', out: 'gallery-10.jpg' },
   ];
 
-  for (const [i, h] of HEROES.entries()) {
-    const s = source(h.src);
-    if (!s) continue;
-    const meta = await open(s).metadata();
-    console.log(`  ${h.slug} source ${meta.width}x${meta.height}, ${kb(s)} KB`);
-    jobs.push(
-      open(s).resize(1920, 1080, { fit: 'cover', position: 'centre', withoutEnlargement: false }).jpeg(JPEG)
-        .toFile(path.join(IMG, `${h.slug}-wide.jpg`)).then(() => [`${h.slug}-wide.jpg`, '1920x1080'])
-    );
-    jobs.push(
-      open(s).resize(1080, 1440, { fit: 'cover', position: 'centre', withoutEnlargement: false }).jpeg(JPEG)
-        .toFile(path.join(IMG, `${h.slug}-tall.jpg`)).then(() => [`${h.slug}-tall.jpg`, '1080x1440'])
-    );
-    if (i === 0) {
-      jobs.push(
-        open(s).resize(1200, 630, { fit: 'cover', position: 'centre' }).jpeg(JPEG)
-          .toFile(path.join(IMG, 'og.jpg')).then(() => ['og.jpg', '1200x630'])
-      );
-    }
-  }
-
-  const logoSrc = source('banner.png');
-  if (logoSrc) {
-    jobs.push(
-      open(logoSrc).png({ compressionLevel: 9 })
-        .toFile(path.join(IMG, 'logo.png')).then(() => ['logo.png', 'native'])
-    );
-    jobs.push(
-      open(logoSrc).resize(180, 180, { fit: 'contain', background: '#07090c' })
-        .flatten({ background: '#07090c' }).png({ compressionLevel: 9 })
-        .toFile(path.join(SITE, 'apple-touch-icon.png')).then(() => ['../apple-touch-icon.png', '180x180'])
-    );
-    jobs.push(
-      open(logoSrc).resize(32, 32, { fit: 'contain', background: { r: 7, g: 9, b: 12, alpha: 1 } })
-        .png({ compressionLevel: 9 })
-        .toFile(path.join(SITE, 'favicon-32.png')).then(() => ['../favicon-32.png', '32x32'])
-    );
-  }
-
-  const CONTENT = [
-    { src: 'hala_index.jpg', out: 'about.jpg', w: 1400, h: 1050 },
-    { src: 'hala1.jpg', out: 'yard.jpg', w: 1200, h: 900 },
-    { src: 'hala2.jpg', out: 'hall.jpg', w: 1200, h: 900 },
-    { src: 'auta1.jpg', out: 'fleet-1.jpg', w: 1200, h: 900 },
-    { src: 'auta2.jpg', out: 'fleet-2.jpg', w: 1200, h: 900 },
-    { src: 'auta3.jpg', out: 'fleet-3.jpg', w: 1200, h: 900 },
-    { src: 'auta4.jpg', out: 'fleet-4.jpg', w: 1200, h: 900 },
-    { src: 'letadlo1.jpg', out: 'gallery-1.jpg', w: 1200, h: 900 },
-    { src: 'letadlo2.jpg', out: 'gallery-2.jpg', w: 1200, h: 900 },
-    { src: 'letadlo3.jpg', out: 'gallery-3.jpg', w: 1200, h: 900 },
-    { src: 'letadlo4.jpg', out: 'gallery-4.jpg', w: 1200, h: 900 },
-    { src: 'hala1.jpg', out: 'gallery-5.jpg', w: 1200, h: 900 },
-    { src: 'hala2.jpg', out: 'gallery-6.jpg', w: 1200, h: 900 },
-    { src: 'auta1.jpg', out: 'gallery-7.jpg', w: 1200, h: 900 },
-    { src: 'auta2.jpg', out: 'gallery-8.jpg', w: 1200, h: 900 },
-    { src: 'auta3.jpg', out: 'gallery-9.jpg', w: 1200, h: 900 },
-    { src: 'auta4.jpg', out: 'gallery-10.jpg', w: 1200, h: 900 },
-  ];
-
-  for (const c of CONTENT) {
+  for (const c of GALLERY) {
     const s = source(c.src);
     if (!s) {
       console.log(`  skip ${c.out} — missing ${c.src}`);
       continue;
     }
+    const meta = await open(s).metadata();
+    console.log(`  ${c.src} ${meta.width}x${meta.height}, ${kb(s)} KB`);
+    const dest = path.join(IMG, c.out);
     jobs.push(
-      open(s).resize(c.w, c.h, { fit: 'cover', position: 'centre' }).jpeg(JPEG)
-        .toFile(path.join(IMG, c.out)).then(() => [c.out, `${c.w}x${c.h}`])
+      open(s)
+        .resize({ width: 1024, withoutEnlargement: true })
+        .jpeg(JPEG)
+        .toFile(dest)
+        .then(async () => {
+          const out = await sharp(dest).metadata();
+          return [c.out, `${out.width}x${out.height}`];
+        })
     );
   }
 
-  const done = await Promise.all(jobs);
-  done.forEach(([name, size]) => console.log(`  ${String(name).padEnd(28)} ${size}`));
-  console.log(`\n  ${done.length} files -> site/img`);
+  jobs.push(brandedShare());
+
+  const done = (await Promise.all(jobs)).flat();
+  done.forEach((row) => {
+    if (!Array.isArray(row)) return;
+    const [name, size] = row;
+    console.log(`  ${String(name).padEnd(28)} ${size}`);
+  });
+  const pruned = pruneStale();
+  console.log(`\n  ${done.length} files written, ${pruned} stale upscales removed`);
 })().catch((err) => {
   console.error(err);
   process.exit(1);

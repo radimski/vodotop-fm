@@ -67,6 +67,54 @@
 
 picture { display: contents; }
 
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: theme('colors.accent');
+}
+.logo-word {
+  display: flex;
+  align-items: baseline;
+  font-family: theme('fontFamily.display');
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: theme('colors.accent');
+}
+.logo-vo,
+.logo-top { font-size: 1.55rem; }
+.logo-do {
+  font-size: 0.92rem;
+  padding: 0 0.06em;
+}
+.logo-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.15;
+}
+.logo-fm {
+  font-family: theme('fontFamily.display');
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: theme('colors.accent');
+}
+.logo-sro {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: theme('colors.frost');
+  opacity: .75;
+}
+@media (min-width: 640px) {
+  .logo-vo,
+  .logo-top { font-size: 1.8rem; }
+  .logo-do { font-size: 1.05rem; }
+}
+
 .hero-pipes {
   position: absolute;
   inset: 0;

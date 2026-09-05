@@ -47,11 +47,18 @@ const icons = {
 const icon = (name, cls = 'h-5 w-5') =>
   `<svg class="${cls}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${icons[name]}</svg>`;
 
+function logoLockup() {
+  return `<span class="logo-word" aria-hidden="true"><span class="logo-vo">VO</span><span class="logo-do">do</span><span class="logo-top">TOP</span></span>
+    <span class="logo-side" aria-hidden="true">
+      <span class="logo-fm">FM</span>
+      <span class="logo-sro">s.r.o.</span>
+    </span>`;
+}
+
 function logoLink() {
-  const logo = fs.existsSync(path.join(SITE_IMG, 'logo.png'))
-    ? '<img class="h-10 w-auto sm:h-12" src="img/logo.png" width="220" height="52" alt="VODOTOP FM s.r.o.">'
-    : '<span class="font-display text-2xl font-bold tracking-tight text-accent">VODOTOP <span class="text-frost">FM</span></span>';
-  return `<a href="index.html" class="flex items-center gap-2 shrink-0" aria-label="VODOTOP FM s.r.o. — úvod">${logo}</a>`;
+  return `<a href="index.html" class="logo shrink-0" aria-label="VODOTOP FM s.r.o. — úvod">
+    ${logoLockup()}
+  </a>`;
 }
 
 function header(t, current) {
@@ -97,7 +104,7 @@ function footer(t) {
   return `<footer class="border-t border-line bg-ink-2 pb-10 pt-16 text-muted">
   <div class="shell grid gap-10 md:grid-cols-2 lg:grid-cols-4">
     <div>
-      <p class="font-display text-2xl font-bold tracking-tight text-frost">VODOTOP <span class="text-accent">FM</span></p>
+      <div class="logo logo--foot">${logoLockup()}</div>
       <p class="mt-3 text-small">${esc(t.footer.tagline)}</p>
     </div>
     <div>
@@ -275,12 +282,14 @@ function home(t) {
     <p class="mt-8"><a class="inline-flex items-center gap-2 text-ice hover:text-frost" href="cinnost.html">${esc(t.home.workMore)}${icon('arrow', 'h-4 w-4')}</a></p>
   </div>
 </section>
-<section>
-  <div class="overflow-hidden">${img('about', { cls: 'h-[min(26rem,62vw)] w-full object-cover', alt: t.meta.ogAlt, sizes: '100vw' })}</div>
-  <div class="shell max-w-prose py-section">
+<section class="border-t border-line py-section">
+  <div class="shell max-w-prose">
     <h2 class="text-display-lg">${esc(t.home.aboutTitle)}</h2>
     <p class="mt-5 text-lead text-muted">${esc(t.home.aboutLead)}</p>
-    <p class="mt-8"><a class="inline-flex items-center gap-2 text-ice hover:text-frost" href="profil.html">${esc(t.home.aboutCta)}${icon('arrow', 'h-4 w-4')}</a></p>
+    <p class="mt-8 flex flex-wrap gap-x-6 gap-y-3">
+      <a class="inline-flex items-center gap-2 text-ice hover:text-frost" href="profil.html">${esc(t.home.aboutCta)}${icon('arrow', 'h-4 w-4')}</a>
+      <a class="inline-flex items-center gap-2 text-ice hover:text-frost" href="fotogalerie.html">${esc(t.home.galleryCta)}${icon('arrow', 'h-4 w-4')}</a>
+    </p>
   </div>
 </section>
 <section class="border-t border-line py-section">
@@ -395,8 +404,8 @@ function lightbox(t, items) {
   return `<div data-lb hidden class="fixed inset-0 z-50 flex items-center justify-center bg-ink/90 p-4" role="dialog" aria-modal="true" aria-label="${esc(t.gallery.title)}">
   <button type="button" data-lb-close class="absolute right-5 top-5 inline-flex h-11 w-11 items-center justify-center rounded-pill border border-white/20 text-frost" aria-label="${esc(t.common.closeLb)}">${icon('close')}</button>
   <button type="button" data-lb-prev class="absolute left-4 inline-flex h-11 w-11 items-center justify-center rounded-pill border border-white/20 text-frost" aria-label="${esc(t.common.prev)}">${icon('arrow', 'h-5 w-5 rotate-180')}</button>
-  <figure class="max-h-[85vh] max-w-5xl">
-    <img data-lb-img alt="" class="max-h-[80vh] w-auto max-w-full object-contain">
+  <figure class="max-h-[80vh] w-full max-w-2xl">
+    <img data-lb-img alt="" class="mx-auto max-h-[70vh] w-auto max-w-full object-contain">
     <figcaption data-lb-count class="mt-3 text-center text-small text-muted"></figcaption>
   </figure>
   <button type="button" data-lb-next class="absolute right-4 inline-flex h-11 w-11 items-center justify-center rounded-pill border border-white/20 text-frost" aria-label="${esc(t.common.next)}">${icon('arrow')}</button>
@@ -407,7 +416,7 @@ function lightbox(t, items) {
 function gallery(t) {
   const tiles = t.gallery.items
     .map(
-      (g, i) => `<button type="button" class="block w-full overflow-hidden rounded-xl" data-lightbox="${i}" aria-label="${esc(g.alt)}">${img(g.slug, { cls: 'w-full', alt: g.alt, sizes: '(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw' })}</button>`
+      (g, i) => `<button type="button" class="block w-full overflow-hidden border border-line bg-ink-2" data-lightbox="${i}" aria-label="${esc(g.alt)}">${img(g.slug, { cls: 'h-auto w-full', alt: g.alt, sizes: '(min-width:1024px) 28vw, (min-width:640px) 45vw, 100vw' })}</button>`
     )
     .join('');
   return `${pageHead(t.gallery.eyebrow, t.gallery.title, t.gallery.lead)}

@@ -6,7 +6,7 @@ module.exports = {
     title: 'VODOTOP FM s.r.o. | Voda, topení, plyn — Baška u Frýdku-Místku',
     description: 'Vodoinstalace, topení, plyn, elektro, revize a zakázky na klíč. VODOTOP FM s.r.o., Kunčičky u Bašky. Od roku 1994.',
     keywords: 'vodoinstalace, topení, plyn, elektro, revize kotlů, tepelná čerpadla, Frýdek-Místek, Baška',
-    ogAlt: 'Areál firmy VODOTOP FM s.r.o. v Kunčičkách u Bašky',
+    ogAlt: 'VODOTOP FM — voda, topení, plyn',
   },
   nav: [
     ['index.html', 'Úvod'],
@@ -66,6 +66,7 @@ module.exports = {
     aboutTitle: 'Hala v Kunčičkách u Bašky',
     aboutLead: 'Firma vznikla v roce 1994 jako servis bytových rozvodů. Dnes montuje, reviduje a staví od rodinného domu po předávací stanice. Jsme v cechu instalatérů pod číslem 0410, na prováděné práce pojištěni na 20 milionů korun.',
     aboutCta: 'Profil firmy',
+    galleryCta: 'Fotogalerie',
     contactTitle: 'Ozvěte se',
     contactLead: 'Volejte, nebo napište, co je potřeba. Ozveme se z Bašky.',
   },
@@ -193,7 +194,7 @@ module.exports = {
   gallery: {
     eyebrow: 'Fotogalerie',
     title: 'Hala, dvůr, vozidla',
-    lead: 'Snímky z původního webu — areál v Kunčičkách u Bašky a vozový park.',
+    lead: 'Snímky z původního webu — archiv areálu v Kunčičkách u Bašky. Novější fotografie doplníme, až je firma dodá.',
     items: [
       { slug: 'gallery-1', alt: 'Areál VODOTOP FM z výšky' },
       { slug: 'gallery-2', alt: 'Areál firmy, letecký pohled' },
