@@ -1,0 +1,5 @@
+# Secrets and stored form data — never commit.
+api/config.php
+api/data/*
+!api/data/.htaccess
+!api/data/.gitkeep

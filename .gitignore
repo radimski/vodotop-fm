@@ -1,0 +1,5 @@
+node_modules/
+export/
+build/config.php
+build/originals/
+*.log

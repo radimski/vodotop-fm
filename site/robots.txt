@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.vodotop-fm.cz/sitemap.xml

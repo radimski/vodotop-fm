@@ -1,0 +1,37 @@
+# Nothing in this folder should be readable as a file.
+
+<IfModule mod_authz_core.c>
+    <FilesMatch "\.(json|log|jsonl|md|ini|bak|dist|config|example\.php)$">
+        Require all denied
+    </FilesMatch>
+    <Files "config.php">
+        Require all denied
+    </Files>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    <FilesMatch "\.(json|log|jsonl|md|ini|bak|dist|config|example\.php)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+    <Files "config.php">
+        Order allow,deny
+        Deny from all
+    </Files>
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^lib/ - [F,L]
+    RewriteRule ^data/ - [F,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header always set X-Robots-Tag "noindex, nofollow"
+    Header always set Content-Security-Policy "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; sandbox"
+    Header always set Referrer-Policy "no-referrer"
+    Header always set X-Frame-Options "DENY"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Cross-Origin-Resource-Policy "same-origin"
+    Header always set Permissions-Policy "accelerometer=(), autoplay=(), camera=(), display-capture=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), publickey-credentials-get=(), usb=()"
+    Header always set Strict-Transport-Security "max-age=300" "expr=%{HTTPS} == 'on' || %{HTTP:X-Forwarded-Proto} == 'https'"
+</IfModule>

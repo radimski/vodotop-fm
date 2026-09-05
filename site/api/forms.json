@@ -1,0 +1,40 @@
+{
+  "forms": {
+    "poptavka": {
+      "label": "Poptávka z webu",
+      "to": ["klus@vodotop-fm.cz"],
+      "cc": [],
+      "subject": "Poptávka z webu — {sluzba}, {jmeno}",
+      "replyTo": "email",
+      "minSeconds": 3,
+      "maxPerHour": 5,
+      "maxPerDay": 20,
+      "store": true,
+      "fields": {
+        "jmeno": { "type": "text", "label": "Jméno a příjmení", "required": true, "min": 2, "max": 100 },
+        "telefon": { "type": "tel", "label": "Telefon", "required": true, "max": 40 },
+        "email": { "type": "email", "label": "E-mail", "required": false, "max": 200 },
+        "sluzba": {
+          "type": "select",
+          "label": "Typ poptávky",
+          "required": true,
+          "options": [
+            "Vodoinstalace",
+            "Topení",
+            "Plyn / revize",
+            "Elektro",
+            "Tepelné čerpadlo",
+            "Solární systém",
+            "Rekonstrukce",
+            "EPS / polystyren",
+            "Zaměstnání",
+            "Jiné"
+          ]
+        },
+        "zprava": { "type": "textarea", "label": "Popis zakázky", "required": true, "min": 5, "max": 4000, "maxLinks": 1 },
+        "souhlas": { "type": "consent", "label": "Souhlas se zpracováním osobních údajů", "required": true },
+        "lang": { "type": "hidden", "label": "Jazyk", "max": 5 }
+      }
+    }
+  }
+}
