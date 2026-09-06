@@ -14,8 +14,7 @@ const CSS_OUT = path.join(SITE, 'fonts.css');
 // weight in between is available for free.
 const CSS_URL =
   'https://fonts.googleapis.com/css2' +
-  '?family=Barlow+Condensed:wght@500..700' +
-  '&family=Source+Sans+3:wght@400..700' +
+  '?family=Source+Sans+3:wght@400..700' +
   '&display=swap';
 
 // Chrome UA is what makes Google serve woff2 instead of ttf

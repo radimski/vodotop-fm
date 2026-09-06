@@ -307,7 +307,9 @@
 
     function show(i) {
       idx = (i + srcs.length) % srcs.length;
-      imgEl.src = srcs[idx];
+      var item = srcs[idx];
+      imgEl.src = typeof item === 'string' ? item : item.src;
+      imgEl.alt = typeof item === 'string' ? '' : (item.alt || '');
       if (countEl) countEl.textContent = idx + 1 + ' / ' + srcs.length;
     }
     function open(i) {

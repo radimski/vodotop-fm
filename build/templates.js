@@ -48,7 +48,7 @@ const icon = (name, cls = 'h-5 w-5') =>
   `<svg class="${cls}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${icons[name]}</svg>`;
 
 const phoneLocal = () => site.phone.replace('+420 ', '');
-const tap = (extra = '') => `inline-flex min-h-11 items-center ${extra}`.trim();
+const tap = (extra = '') => `inline-flex min-h-11 min-w-11 items-center ${extra}`.trim();
 function mapsLink(inner, cls = '') {
   return `<a class="${tap(cls)}" href="${site.mapUrl}" target="_blank" rel="noopener noreferrer">${inner}</a>`;
 }
@@ -79,7 +79,8 @@ function header(t, currentFile) {
     <nav class="nav-desktop hidden items-center gap-5 text-small font-semibold lg:flex" aria-label="Hlavní">
       ${links}
     </nav>
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2 sm:gap-3">
+      <a class="inline-flex h-11 w-11 items-center justify-center rounded-pill border border-white/15 text-ice sm:hidden" href="tel:${site.phoneHref}" aria-label="${esc(t.common.call)} ${esc(phoneLocal())}">${icon('phone')}</a>
       <a class="${tap('hidden font-display text-lg font-semibold tracking-wide text-ice hover:text-frost sm:inline-flex')}" href="tel:${site.phoneHref}">${esc(site.phone)}</a>
       <button type="button" class="lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-pill border border-white/15" data-menu-open aria-expanded="false" aria-controls="mobile-nav" aria-label="${esc(t.common.menu)}">${icon('menu')}</button>
     </div>
@@ -362,8 +363,8 @@ function services(t) {
 
 function references(t, refs) {
   const years = [...new Set(refs.map((r) => r.year))].sort((a, b) => b.localeCompare(a));
-  const filters = [`<button type="button" class="filter rounded-pill border border-line px-4 py-2 text-small" data-filter="all" aria-pressed="true">${esc(t.common.allYears)}</button>`]
-    .concat(years.map((y) => `<button type="button" class="filter rounded-pill border border-line px-4 py-2 text-small" data-filter="${y}" aria-pressed="false">${y}</button>`))
+  const filters = [`<button type="button" class="filter min-h-11 rounded-pill border border-line px-4 text-small hover:border-ice hover:text-ice" data-filter="all" aria-pressed="true">${esc(t.common.allYears)}</button>`]
+    .concat(years.map((y) => `<button type="button" class="filter min-h-11 rounded-pill border border-line px-4 text-small hover:border-ice hover:text-ice" data-filter="${y}" aria-pressed="false">${y}</button>`))
     .join('');
   const items = refs
     .map((r, i) => {
@@ -418,7 +419,7 @@ function marks(t) {
 }
 
 function lightbox(t, items) {
-  const data = JSON.stringify(items.map((g) => `img/${byslug[g.slug].file}`));
+  const data = JSON.stringify(items.map((g) => ({ src: `img/${byslug[g.slug].file}`, alt: g.alt })));
   return `<div data-lb hidden class="fixed inset-0 z-50 flex items-center justify-center bg-ink/90 p-4" role="dialog" aria-modal="true" aria-label="${esc(t.gallery.title)}">
   <button type="button" data-lb-close class="absolute right-5 top-5 inline-flex h-11 w-11 items-center justify-center rounded-pill border border-white/20 text-frost" aria-label="${esc(t.common.closeLb)}">${icon('close')}</button>
   <button type="button" data-lb-prev class="absolute left-4 inline-flex h-11 w-11 items-center justify-center rounded-pill border border-white/20 text-frost" aria-label="${esc(t.common.prev)}">${icon('arrow', 'h-5 w-5 rotate-180')}</button>
@@ -476,6 +477,7 @@ function contact(t) {
   return `${pageHead(t.contact.eyebrow, t.contact.title, t.contact.lead)}
 <section class="py-section">
   <div class="shell grid gap-10 lg:grid-cols-2">
+    <p class="mb-8 max-w-xl text-muted">${esc(t.home.hours)}</p>
     <dl class="grid gap-4 text-small">
       <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.addressLabel)}</dt><dd class="mt-1">${mapsLink(`${esc(site.street)}, ${esc(site.postal)} ${esc(site.city)}`, 'text-frost hover:text-ice')}</dd></div>
       <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.gpsLabel)}</dt><dd class="mt-1">${mapsLink(esc(t.contact.gps), 'hover:text-ice')}</dd></div>
@@ -483,7 +485,7 @@ function contact(t) {
       <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.phoneLabel)}</dt><dd class="mt-1"><a class="${tap('text-lg text-ice hover:text-frost')}" href="tel:${site.phoneHref}">${esc(site.phone)}</a></dd></div>
       <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.mobileLabel)}</dt><dd class="mt-1"><a class="${tap('hover:text-ice')}" href="tel:${site.mobileHref}">${esc(site.mobile)}</a></dd></div>
       <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.emailLabel)}</dt><dd class="mt-1"><a class="${tap('break-all hover:text-ice')}" href="mailto:${site.email}">${esc(site.email)}</a></dd></div>
-      <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.faxLabel)}</dt><dd class="mt-1">${esc(t.contact.fax)}</dd></div>
+      <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.faxLabel)}</dt><dd class="mt-1"><a class="${tap('hover:text-ice')}" href="tel:+420558440048">${esc(t.contact.fax)}</a></dd></div>
       <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.boxLabel)}</dt><dd class="mt-1">${esc(site.dataBox)}</dd></div>
       <div><a class="btn-ghost-dark mt-2" href="${site.mapUrl}" target="_blank" rel="noopener noreferrer">${icon('pin', 'h-4 w-4')}${esc(t.contact.mapCta)}</a></div>
     </dl>

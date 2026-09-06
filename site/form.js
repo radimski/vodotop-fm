@@ -231,11 +231,12 @@
     // Let the browser do the first pass. It knows the visitor's language for
     // built-in messages and it is instant.
     if (typeof form.checkValidity === 'function' && !form.checkValidity()) {
-      var bad = form.querySelector(':invalid');
-      if (bad) {
-        markField(form, bad.name, state.msg.required);
-        focus(bad);
+      var invalids = form.querySelectorAll(':invalid');
+      for (var vi = 0; vi < invalids.length; vi++) {
+        var bad = invalids[vi];
+        if (bad.name) markField(form, bad.name, state.msg.required);
       }
+      if (invalids[0]) focus(invalids[0]);
       say(state, 'error', state.msg.required);
       return;
     }

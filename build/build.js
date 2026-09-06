@@ -59,6 +59,7 @@ ${noindex ? '<meta name="robots" content="noindex,follow">\n' : ''}<link rel="ca
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" as="font" type="font/woff2" href="fonts/sourcesans3-400-700-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/sourcesans3-400-700-latinext.woff2" crossorigin>
 <link rel="stylesheet" href="fonts.css?v=${v}">
 <link rel="stylesheet" href="styles.css?v=${v}">
 ${jsonld.map((j) => `<script type="application/ld+json">${JSON.stringify(j)}</script>`).join('\n')}`;
@@ -81,6 +82,10 @@ function businessLd() {
       addressCountry: site.country,
     },
     image: `${site.origin}/img/${images.find((i) => i.slug === 'og').file}`,
+    areaServed: [
+      { '@type': 'City', name: 'Baška' },
+      { '@type': 'AdministrativeArea', name: 'Frýdek-Místek' },
+    ],
   };
   if (site.geo) ld.geo = { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lon };
   return ld;
@@ -113,7 +118,7 @@ ${T.footer(t)}`;
         title,
         description: desc,
         canonical: pageUrl(file),
-        jsonld: extraLd,
+        jsonld: file === '404.html' ? extraLd : [businessLd(), ...extraLd],
         noindex: file === '404.html',
       }),
       body,
@@ -122,8 +127,8 @@ ${T.footer(t)}`;
   );
 }
 
-page('index.html', t.meta.title, t.meta.description, T.home(t), false, [businessLd()]);
-page('profil.html', `Profil firmy | ${site.brand}`, t.meta.description, T.profile(t));
+page('index.html', t.meta.title, t.meta.description, T.home(t));
+page('profil.html', `Profil firmy | ${site.brand}`, t.profile.lead, T.profile(t));
 page('cinnost.html', `Činnost firmy | ${site.brand}`, t.services.lead, T.services(t));
 page('reference.html', `Reference | ${site.brand}`, t.refsPage.lead, T.references(t, refs));
 page('fotogalerie.html', `Fotogalerie | ${site.brand}`, t.gallery.lead, T.gallery(t));
