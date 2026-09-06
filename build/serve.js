@@ -38,7 +38,13 @@ http
     }
     fs.readFile(abs, (err, buf) => {
       if (err) {
-        res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }).end('404 ' + rel);
+        fs.readFile(path.join(ROOT, '404.html'), (e2, html) => {
+          res.writeHead(404, {
+            'Content-Type': 'text/html; charset=utf-8',
+            'Cache-Control': 'no-store',
+          });
+          res.end(e2 ? '404' : html);
+        });
         return;
       }
       res.writeHead(200, {

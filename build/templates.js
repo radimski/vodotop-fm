@@ -47,6 +47,12 @@ const icons = {
 const icon = (name, cls = 'h-5 w-5') =>
   `<svg class="${cls}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${icons[name]}</svg>`;
 
+const phoneLocal = () => site.phone.replace('+420 ', '');
+const tap = (extra = '') => `inline-flex min-h-11 items-center ${extra}`.trim();
+function mapsLink(inner, cls = '') {
+  return `<a class="${tap(cls)}" href="${site.mapUrl}" target="_blank" rel="noopener noreferrer">${inner}</a>`;
+}
+
 function logoLockup() {
   return `<span class="logo-word" aria-hidden="true"><span class="logo-vo">VO</span><span class="logo-do">do</span><span class="logo-top">TOP</span></span>
     <span class="logo-side" aria-hidden="true">
@@ -61,25 +67,26 @@ function logoLink() {
   </a>`;
 }
 
-function header(t, current) {
+function header(t, currentFile) {
   const links = t.nav
     .map(([href, label]) => {
-      const cur = href === current ? ' aria-current="page" class="text-ice"' : ' class="text-frost/80 hover:text-ice"';
-      return `<a href="${href}"${cur}>${esc(label)}</a>`;
+      const on = href === currentFile;
+      const cls = tap(on ? 'text-ice' : 'text-frost/80 hover:text-ice');
+      return `<a href="${href}" class="${cls}"${on ? ' aria-current="page"' : ''}>${esc(label)}</a>`;
     })
     .join('\n        ');
   const mobile = t.nav
-    .map(([href, label]) => `<a data-menu-link href="${href}" class="block py-3 text-lg text-frost">${esc(label)}</a>`)
+    .map(([href, label]) => `<a data-menu-link href="${href}" class="flex min-h-11 items-center py-2 text-lg text-frost">${esc(label)}</a>`)
     .join('\n      ');
   return `<a class="skip sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-pill focus:bg-ice focus:px-4 focus:py-2 focus:text-ink" href="#obsah">${esc(t.common.skip)}</a>
 <header class="site-header sticky top-0 z-40" data-header>
-  <div class="shell flex h-20 items-center justify-between gap-4">
+  <div class="shell flex h-14 items-center justify-between gap-4 sm:h-20">
     ${logoLink()}
-    <nav class="nav-desktop hidden items-center gap-6 text-small font-semibold lg:flex" aria-label="Hlavní">
+    <nav class="nav-desktop hidden items-center gap-5 text-small font-semibold lg:flex" aria-label="Hlavní">
       ${links}
     </nav>
     <div class="flex items-center gap-3">
-      <a class="hidden sm:inline-flex font-display text-lg font-semibold tracking-wide text-ice hover:text-frost" href="tel:${site.phoneHref}">558 440 040</a>
+      <a class="${tap('hidden font-display text-lg font-semibold tracking-wide text-ice hover:text-frost sm:inline-flex')}" href="tel:${site.phoneHref}">${esc(site.phone)}</a>
       <button type="button" class="lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-pill border border-white/15" data-menu-open aria-expanded="false" aria-controls="mobile-nav" aria-label="${esc(t.common.menu)}">${icon('menu')}</button>
     </div>
   </div>
@@ -89,7 +96,7 @@ function header(t, current) {
       <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-pill border border-white/15" data-menu-close aria-label="${esc(t.common.close)}">${icon('close')}</button>
     </div>
     <nav class="mt-10" aria-label="Mobilní">
-      <a class="btn-primary mb-6 w-full" href="tel:${site.phoneHref}">${esc(t.common.call)} 558 440 040</a>
+      <a class="btn-primary mb-6 w-full" href="tel:${site.phoneHref}">${esc(t.common.call)} ${esc(phoneLocal())}</a>
       ${mobile}
     </nav>
   </div>
@@ -97,9 +104,9 @@ function header(t, current) {
 }
 
 function footer(t) {
-  const nav = t.nav.map(([href, label]) => `<li><a class="hover:text-ice" href="${href}">${esc(label)}</a></li>`).join('');
+  const nav = t.nav.map(([href, label]) => `<li><a class="${tap('hover:text-ice')}" href="${href}">${esc(label)}</a></li>`).join('');
   const legal = Object.values(t.legalLinks)
-    .map((l) => `<li><a class="hover:text-ice" href="${l.file}">${esc(l.label)}</a></li>`)
+    .map((l) => `<li><a class="${tap('hover:text-ice')}" href="${l.file}">${esc(l.label)}</a></li>`)
     .join('');
   return `<footer class="border-t border-line bg-ink-2 pb-10 pt-16 text-muted">
   <div class="shell grid gap-10 md:grid-cols-2 lg:grid-cols-4">
@@ -109,27 +116,33 @@ function footer(t) {
     </div>
     <div>
       <p class="font-display text-small font-semibold uppercase tracking-wider text-frost">${esc(t.footer.navTitle)}</p>
-      <ul class="mt-4 space-y-2 text-small">${nav}</ul>
+      <ul class="mt-4 space-y-1 text-small">${nav}</ul>
     </div>
     <div>
       <p class="font-display text-small font-semibold uppercase tracking-wider text-frost">${esc(t.footer.legalTitle)}</p>
-      <ul class="mt-4 space-y-2 text-small">${legal}</ul>
+      <ul class="mt-4 space-y-1 text-small">${legal}</ul>
     </div>
     <div>
       <p class="font-display text-small font-semibold uppercase tracking-wider text-frost">${esc(t.footer.contactTitle)}</p>
-      <ul class="mt-4 space-y-2 text-small">
-        <li>${esc(site.street)}<br>${esc(site.postal)} ${esc(site.city)}</li>
-        <li><a class="hover:text-ice" href="tel:${site.phoneHref}">${esc(site.phone)}</a></li>
-        <li><a class="break-all hover:text-ice" href="mailto:${site.email}">${esc(site.email)}</a></li>
+      <ul class="mt-4 space-y-1 text-small">
+        <li>${mapsLink(`${esc(site.street)}<br>${esc(site.postal)} ${esc(site.city)}`, 'hover:text-ice')}</li>
+        <li><a class="${tap('hover:text-ice')}" href="tel:${site.phoneHref}">${esc(site.phone)}</a></li>
+        <li><a class="${tap('break-all hover:text-ice')}" href="mailto:${site.email}">${esc(site.email)}</a></li>
+        <li class="pt-2 text-tiny">${esc(t.footer.ico)} ${esc(site.legal.ico)} · ${esc(site.legal.dic)}</li>
+        <li class="text-tiny">${esc(site.legal.seat)}</li>
+        <li class="text-tiny">${esc(t.footer.registry)}</li>
       </ul>
     </div>
   </div>
   <div class="shell mt-12 flex flex-col gap-2 border-t border-line pt-6 text-tiny sm:flex-row sm:justify-between">
     <p>© ${new Date().getFullYear()} ${esc(site.brandFull)}. ${esc(t.footer.rights)}</p>
-    <p>${esc(t.footer.credit)} <a data-dev-contact class="cursor-pointer font-medium text-frost/70 underline decoration-white/20 underline-offset-2 hover:text-ice">${esc(t.footer.creditName)}</a></p>
+    <p>${esc(t.footer.credit)} <a data-dev-contact class="${tap('cursor-pointer font-medium text-frost/70 underline decoration-white/20 underline-offset-2 hover:text-ice')}">${esc(t.footer.creditName)}</a></p>
   </div>
 </footer>
-<button type="button" data-totop hidden class="fixed bottom-5 right-5 z-30 inline-flex h-12 w-12 items-center justify-center rounded-pill bg-ink-3 text-frost shadow-lift hover:bg-accent" aria-label="${esc(t.footer.backToTop)}">${icon('arrowUp')}</button>`;
+<button type="button" data-totop hidden class="fixed bottom-5 right-5 z-30 inline-flex h-12 w-12 items-center justify-center rounded-pill bg-ink-3 text-frost shadow-lift hover:bg-accent" aria-label="${esc(t.footer.backToTop)}">${icon('arrowUp')}</button>
+<div class="call-bar" role="region" aria-label="${esc(t.common.call)} ${esc(phoneLocal())}">
+  <a href="tel:${site.phoneHref}">${icon('phone', 'h-5 w-5')}${esc(t.common.call)} ${esc(phoneLocal())}</a>
+</div>`;
 }
 
 function heroPipes() {
@@ -258,7 +271,7 @@ function hero(t) {
     <h1 class="mt-5 max-w-4xl text-display-xl text-frost">${words}</h1>
     <p class="hero-lead mt-6 max-w-md text-lead text-muted">${esc(t.home.lead)}</p>
     <div class="mt-10 flex flex-wrap items-center gap-4">
-      <a class="btn-primary" href="tel:${site.phoneHref}">${esc(t.home.call)} ${esc(site.phone.replace('+420 ', ''))}</a>
+      <a class="btn-primary" href="tel:${site.phoneHref}">${esc(t.home.call)} ${esc(phoneLocal())}</a>
       <a class="btn-ghost-dark" href="kontakty.html">${esc(t.home.cta)}</a>
     </div>
   </div>
@@ -279,7 +292,7 @@ function home(t) {
   <div class="shell">
     <h2 class="text-small font-semibold uppercase tracking-widest text-ice">${esc(t.home.workTitle)}</h2>
     <dl class="mt-6">${trades}</dl>
-    <p class="mt-8"><a class="inline-flex items-center gap-2 text-ice hover:text-frost" href="cinnost.html">${esc(t.home.workMore)}${icon('arrow', 'h-4 w-4')}</a></p>
+    <p class="mt-8"><a class="${tap('gap-2 text-ice hover:text-frost')}" href="cinnost.html">${esc(t.home.workMore)}${icon('arrow', 'h-4 w-4')}</a></p>
   </div>
 </section>
 <section class="border-t border-line py-section">
@@ -287,19 +300,34 @@ function home(t) {
     <h2 class="text-display-lg">${esc(t.home.aboutTitle)}</h2>
     <p class="mt-5 text-lead text-muted">${esc(t.home.aboutLead)}</p>
     <p class="mt-8 flex flex-wrap gap-x-6 gap-y-3">
-      <a class="inline-flex items-center gap-2 text-ice hover:text-frost" href="profil.html">${esc(t.home.aboutCta)}${icon('arrow', 'h-4 w-4')}</a>
-      <a class="inline-flex items-center gap-2 text-ice hover:text-frost" href="fotogalerie.html">${esc(t.home.galleryCta)}${icon('arrow', 'h-4 w-4')}</a>
+      <a class="${tap('gap-2 text-ice hover:text-frost')}" href="profil.html">${esc(t.home.aboutCta)}${icon('arrow', 'h-4 w-4')}</a>
+      <a class="${tap('gap-2 text-ice hover:text-frost')}" href="fotogalerie.html">${esc(t.home.galleryCta)}${icon('arrow', 'h-4 w-4')}</a>
     </p>
+  </div>
+</section>
+<section class="border-t border-line py-section">
+  <div class="shell">
+    <h2 class="text-small font-semibold uppercase tracking-widest text-ice">${esc(t.home.photosTitle)}</h2>
+    <div class="mt-6 grid gap-3 sm:grid-cols-3">
+      ${t.home.photos
+        .map(
+          (p) => `<a class="block overflow-hidden border border-line bg-ink-2" href="fotogalerie.html">${img(p.slug, { cls: 'h-auto w-full', alt: p.alt, sizes: '(min-width:640px) 30vw, 100vw' })}</a>`
+        )
+        .join('')}
+    </div>
+    <p class="mt-6"><a class="${tap('gap-2 text-ice hover:text-frost')}" href="fotogalerie.html">${esc(t.home.galleryCta)}${icon('arrow', 'h-4 w-4')}</a></p>
   </div>
 </section>
 <section class="border-t border-line py-section">
   <div class="shell">
     <h2 class="text-display-lg">${esc(t.home.contactTitle)}</h2>
     <p class="mt-4 max-w-xl text-muted">${esc(t.home.contactLead)}</p>
+    <p class="mt-3 max-w-xl text-muted">${esc(t.home.hours)}</p>
     <p class="mt-8 font-display text-display-lg tracking-tight">
-      <a class="text-ice hover:text-frost" href="tel:${site.phoneHref}">${esc(site.phone)}</a>
+      <a class="${tap('text-ice hover:text-frost')}" href="tel:${site.phoneHref}">${esc(site.phone)}</a>
     </p>
-    <p class="mt-3 text-muted">${esc(site.street)}<br>${esc(site.postal)} ${esc(site.city)}</p>
+    <p class="mt-3">${mapsLink(`${esc(site.street)}<br>${esc(site.postal)} ${esc(site.city)}`, 'text-muted hover:text-ice')}</p>
+    <p class="mt-2"><a class="${tap('text-ice hover:text-frost')}" href="mailto:${site.email}">${esc(site.email)}</a></p>
     <p class="mt-8"><a class="btn-ghost-dark" href="kontakty.html">${esc(t.home.cta)}</a></p>
   </div>
 </section>`;
@@ -442,16 +470,16 @@ function contact(t) {
   const f = t.contact.form;
   const inputCls =
     'w-full rounded-lg border border-line bg-ink px-4 py-3 text-base text-frost placeholder:text-muted-2 focus:border-ice focus:outline-none focus:ring-2 focus:ring-ice/30';
-  const field = (label, input) =>
-    `<label class="block"><span class="mb-1.5 block text-small font-medium text-frost">${esc(label)}</span>${input}</label>`;
+  const field = (label, id, input) =>
+    `<label class="block" for="${id}"><span class="mb-1.5 block text-small font-medium text-frost">${esc(label)}</span>${input}</label>`;
   const opts = f.serviceOptions.map((o) => `<option value="${esc(o)}">${esc(o)}</option>`).join('');
   const people = site.people
     .map(
       (p) => `<li class="card p-5">
       <p class="text-tiny uppercase tracking-widest text-ice">${esc(p.role)}</p>
       <h3 class="mt-2 text-display-sm">${esc(p.name)}</h3>
-      <p class="mt-2"><a class="hover:text-ice" href="tel:${p.phoneHref}">${esc(p.phone)}</a></p>
-      <p><a class="break-all hover:text-ice" href="mailto:${p.email}">${esc(p.email)}</a></p>
+      <p class="mt-2"><a class="${tap('hover:text-ice')}" href="tel:${p.phoneHref}">${esc(p.phone)}</a></p>
+      <p><a class="${tap('break-all hover:text-ice')}" href="mailto:${p.email}">${esc(p.email)}</a></p>
     </li>`
     )
     .join('');
@@ -459,11 +487,12 @@ function contact(t) {
 <section class="py-section">
   <div class="shell grid gap-10 lg:grid-cols-2">
     <dl class="grid gap-4 text-small">
-      <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.addressLabel)}</dt><dd class="mt-1">${esc(site.street)}, ${esc(site.postal)} ${esc(site.city)}</dd></div>
-      <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.gpsLabel)}</dt><dd class="mt-1">${esc(t.contact.gps)}</dd></div>
+      <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.addressLabel)}</dt><dd class="mt-1">${mapsLink(`${esc(site.street)}, ${esc(site.postal)} ${esc(site.city)}`, 'text-frost hover:text-ice')}</dd></div>
+      <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.gpsLabel)}</dt><dd class="mt-1">${mapsLink(esc(t.contact.gps), 'hover:text-ice')}</dd></div>
       <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.icoLabel)}</dt><dd class="mt-1">${esc(site.legal.ico)} · ${esc(site.legal.dic)}</dd></div>
-      <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.phoneLabel)}</dt><dd class="mt-1"><a class="text-lg text-ice" href="tel:${site.phoneHref}">${esc(site.phone)}</a></dd></div>
-      <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.mobileLabel)}</dt><dd class="mt-1"><a href="tel:${site.mobileHref}">${esc(site.mobile)}</a></dd></div>
+      <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.phoneLabel)}</dt><dd class="mt-1"><a class="${tap('text-lg text-ice hover:text-frost')}" href="tel:${site.phoneHref}">${esc(site.phone)}</a></dd></div>
+      <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.mobileLabel)}</dt><dd class="mt-1"><a class="${tap('hover:text-ice')}" href="tel:${site.mobileHref}">${esc(site.mobile)}</a></dd></div>
+      <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.emailLabel)}</dt><dd class="mt-1"><a class="${tap('break-all hover:text-ice')}" href="mailto:${site.email}">${esc(site.email)}</a></dd></div>
       <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.faxLabel)}</dt><dd class="mt-1">${esc(t.contact.fax)}</dd></div>
       <div><dt class="text-tiny uppercase tracking-widest text-ice">${esc(t.contact.boxLabel)}</dt><dd class="mt-1">${esc(site.dataBox)}</dd></div>
       <div><a class="btn-ghost-dark mt-2" href="${site.mapUrl}" target="_blank" rel="noopener noreferrer">${icon('pin', 'h-4 w-4')}${esc(t.contact.mapCta)}</a></div>
@@ -471,14 +500,14 @@ function contact(t) {
     <form data-form="poptavka" class="card p-6 sm:p-8" novalidate ${msgAttrs(f)}>
       <h2 class="text-display-sm">${esc(t.contact.formTitle)}</h2>
       <div class="mt-6 grid gap-4 sm:grid-cols-2">
-        ${field(f.name, `<input class="${inputCls}" type="text" name="jmeno" required autocomplete="name" minlength="2" maxlength="100">`)}
-        ${field(f.phone, `<input class="${inputCls}" type="tel" name="telefon" required autocomplete="tel" maxlength="40">`)}
-        <div class="sm:col-span-2">${field(f.email, `<input class="${inputCls}" type="email" name="email" autocomplete="email" maxlength="200">`)}</div>
-        <div class="sm:col-span-2">${field(f.service, `<select class="${inputCls}" name="sluzba" required><option value="">${esc(f.servicePh)}</option>${opts}</select>`)}</div>
-        <div class="sm:col-span-2">${field(f.message, `<textarea class="${inputCls}" name="zprava" rows="5" required minlength="5" maxlength="4000"></textarea>`)}</div>
+        ${field(f.name, 'jmeno', `<input id="jmeno" class="${inputCls}" type="text" name="jmeno" required autocomplete="name" minlength="2" maxlength="100">`)}
+        ${field(f.phone, 'telefon', `<input id="telefon" class="${inputCls}" type="tel" name="telefon" required autocomplete="tel" maxlength="40">`)}
+        <div class="sm:col-span-2">${field(f.email, 'email', `<input id="email" class="${inputCls}" type="email" name="email" autocomplete="email" maxlength="200">`)}</div>
+        <div class="sm:col-span-2">${field(f.service, 'sluzba', `<select id="sluzba" class="${inputCls}" name="sluzba" required><option value="">${esc(f.servicePh)}</option>${opts}</select>`)}</div>
+        <div class="sm:col-span-2">${field(f.message, 'zprava', `<textarea id="zprava" class="${inputCls}" name="zprava" rows="5" required minlength="5" maxlength="4000"></textarea>`)}</div>
       </div>
-      <label class="mt-5 flex items-start gap-3 text-small">
-        <input type="checkbox" name="souhlas" required class="mt-1 h-5 w-5 shrink-0 rounded border-line bg-ink">
+      <label class="mt-5 flex min-h-11 items-start gap-3 text-small" for="souhlas">
+        <input id="souhlas" type="checkbox" name="souhlas" required class="mt-1 h-6 w-6 shrink-0 rounded border-line bg-ink">
         <span>${esc(f.consentBefore)}<a class="text-ice underline underline-offset-2" href="${t.legalLinks.privacy.file}">${esc(f.consentLink)}</a>${esc(f.consentAfter)}</span>
       </label>
       <input type="hidden" name="lang" value="cs">
@@ -512,7 +541,7 @@ function legalPage(t, doc_) {
     })
     .join('');
   return `<div class="shell max-w-prose py-16 sm:py-24">
-  <a href="index.html" class="inline-flex items-center gap-2 text-small font-semibold text-ice hover:text-frost">${icon('arrow', 'h-4 w-4 rotate-180')}${esc(t.common.backHome)}</a>
+  <a href="index.html" class="${tap('gap-2 text-small font-semibold text-ice hover:text-frost')}">${icon('arrow', 'h-4 w-4 rotate-180')}${esc(t.common.backHome)}</a>
   <h1 class="mt-8 text-display-lg">${esc(doc_.title)}</h1>
   ${sections}
 </div>`;

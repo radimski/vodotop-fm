@@ -10,7 +10,7 @@ module.exports = {
           'VODOTOP FM s.r.o., Kunčičky u Bašky 355, 739 01 Baška.',
           'IČO 26823519, DIČ CZ26823519. Zápis 31. 12. 2003, Krajský soud v Ostravě, oddíl C, vložka 26765. Základní kapitál 1 900 000 Kč.',
           'Jednatelé: Ing. Boris Klus, Petr Liberda.',
-          'Kontakt: <a href="mailto:klus@vodotop-fm.cz">klus@vodotop-fm.cz</a>, tel. 558 440 040, datová schránka ikza5tr.',
+          'Kontakt: <a href="mailto:klus@vodotop-fm.cz">klus@vodotop-fm.cz</a>, <a href="tel:+420558440040">tel. +420 558 440 040</a>, datová schránka ikza5tr.',
         ],
       },
     ],

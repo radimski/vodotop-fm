@@ -1,7 +1,7 @@
 /* Language-independent facts about the business + build switches. */
 module.exports = {
   origin: 'https://www.vodotop-fm.cz',
-  assetVersion: 13,
+  assetVersion: 14,
 
   hsts: {
     maxAge: 300,

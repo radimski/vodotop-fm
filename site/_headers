@@ -5,7 +5,7 @@
 # client's site does. Pages is HTTPS-only, so HSTS is unconditional here.
 
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://challenges.cloudflare.com; connect-src 'self'; img-src 'self'; style-src 'self' 'sha256-WZbE/DlVxG3J2kXf4pRQxYlohrNCpZh/gOl+CDjcxeE='; font-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://challenges.cloudflare.com; connect-src 'self'; img-src 'self'; style-src 'self' 'sha256-9hRvLxulIrjyZgzvITQqGjgSf6CMk0yAVZKvqGmkIYA='; font-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: accelerometer=(), autoplay=(), browsing-topics=(), camera=(), display-capture=(), encrypted-media=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), usb=(), xr-spatial-tracking=()
   X-Content-Type-Options: nosniff

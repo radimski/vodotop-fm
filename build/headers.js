@@ -201,7 +201,12 @@ ${lines}
 
     # Cloudflare Pages code. Inert on this host and not part of the website.
     RewriteRule "^functions/" - [F,L]
+
+    # Old yearly reference URLs from the 2000s site.
+    RewriteRule "^reference(20[0-9]{2})\\.html$" /reference.html?rok=$1 [R=301,L]
 </IfModule>
+
+ErrorDocument 404 /404.html
 
 # Directory listings, in case the host ships with them on.
 Options -Indexes
@@ -258,6 +263,11 @@ ${adds}
     </httpProtocol>
 
     <directoryBrowse enabled="false" />
+
+    <httpErrors errorMode="Custom" existingResponse="Replace">
+      <remove statusCode="404" />
+      <error statusCode="404" path="/404.html" responseMode="ExecuteURL" />
+    </httpErrors>
 
     <security>
       <requestFiltering>

@@ -4,8 +4,11 @@
 
 @layer base {
   html {
-    scroll-padding-top: 80px;
+    scroll-padding-top: 56px;
     background-color: theme('colors.ink');
+  }
+  @media (min-width: 640px) {
+    html { scroll-padding-top: 80px; }
   }
   body {
     max-width: 100%;
@@ -71,6 +74,7 @@ picture { display: contents; }
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-height: 44px;
   text-decoration: none;
   color: theme('colors.accent');
 }
@@ -164,6 +168,42 @@ picture { display: contents; }
 .masonry > * {
   break-inside: avoid;
   margin-bottom: 1rem;
+}
+
+.call-bar { display: none; }
+@media (max-width: 639px) {
+  :root { --call-bar: 48px; }
+  body {
+    padding-bottom: calc(var(--call-bar) + env(safe-area-inset-bottom, 0px));
+  }
+  html {
+    scroll-padding-bottom: calc(var(--call-bar) + env(safe-area-inset-bottom, 0px));
+  }
+  .call-bar {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 45;
+    background: theme('colors.accent');
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, .35);
+  }
+  .call-bar a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    min-height: 44px;
+    padding: 0.5rem 1rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  [data-totop] {
+    bottom: calc(var(--call-bar) + env(safe-area-inset-bottom, 0px) + 0.75rem);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

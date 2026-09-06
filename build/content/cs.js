@@ -36,6 +36,8 @@ module.exports = {
     legalTitle: 'Informace',
     contactTitle: 'Sídlo',
     rights: 'Všechna práva vyhrazena.',
+    ico: 'IČO',
+    registry: 'Krajský soud v Ostravě, oddíl C, vložka 26765',
     credit: 'Vytvořil s ❤️',
     creditName: 'Marek',
     backToTop: 'Nahoru',
@@ -69,6 +71,13 @@ module.exports = {
     galleryCta: 'Fotogalerie',
     contactTitle: 'Ozvěte se',
     contactLead: 'Volejte, nebo napište, co je potřeba. Ozveme se z Bašky.',
+    hours: 'Havárie vody, topení a plynu řešte telefonem — pevná linka i mobily jednatelů.',
+    photosTitle: 'Z areálu',
+    photos: [
+      { slug: 'gallery-5', alt: 'Provozní hala VODOTOP FM v Kunčičkách u Bašky' },
+      { slug: 'gallery-7', alt: 'Servisní vozidla firmy před halou' },
+      { slug: 'gallery-1', alt: 'Areál firmy z výšky' },
+    ],
   },
   profile: {
     eyebrow: 'Profil firmy',

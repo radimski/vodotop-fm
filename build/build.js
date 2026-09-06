@@ -52,6 +52,7 @@ ${noindex ? '<meta name="robots" content="noindex,follow">\n' : ''}<link rel="ca
 <meta property="og:title" content="${T.esc(title)}">
 <meta property="og:description" content="${T.esc(description)}">
 <meta property="og:image" content="${ogImg}">
+<meta property="og:image:alt" content="${T.esc(t.meta.ogAlt)}">
 <meta property="og:locale" content="cs_CZ">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -161,15 +162,7 @@ ${pages.map((p) => `  <url><loc>${p ? `${site.origin}/${p}` : `${site.origin}/`}
 );
 write('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${site.origin}/sitemap.xml\n`);
 
-let htaccess = headers.htaccess();
-htaccess += `
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteRule ^reference(20[0-9]{2})\\.html$ /reference.html?rok=$1 [R=301,L]
-</IfModule>
-ErrorDocument 404 /404.html
-`;
-fs.writeFileSync(path.join(SITE, '.htaccess'), htaccess);
+fs.writeFileSync(path.join(SITE, '.htaccess'), headers.htaccess());
 fs.writeFileSync(path.join(SITE, 'web.config'), headers.webConfig());
 fs.writeFileSync(path.join(SITE, '_headers'), headers.cfHeaders());
 console.log('wrote headers');
