@@ -38,8 +38,6 @@ module.exports = {
     rights: 'Všechna práva vyhrazena.',
     ico: 'IČO',
     registry: 'Krajský soud v Ostravě, oddíl C, vložka 26765',
-    credit: 'Vytvořil s ❤️',
-    creditName: 'Marek',
     backToTop: 'Nahoru',
     marks: 'Oprávnění',
   },

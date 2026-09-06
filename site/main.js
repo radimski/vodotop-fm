@@ -73,55 +73,6 @@
     window.addEventListener('load', apply);
   })();
 
-  /* ------------------------------------------------- developer credit */
-  /* The footer credit opens a WhatsApp chat with the developer.
-   *
-   * The number is not in the HTML, and it is not a readable string here
-   * either: it is stored as digit offsets, so a scraper grepping the served
-   * JS for a run of digits finds nothing. Be clear-eyed about what that buys —
-   * it defeats regex harvesters over HTML and JS, and nothing more. Anything
-   * driving a real browser can click the link and read the result, because the
-   * page has to produce the number to be useful at all. Obfuscation, not
-   * secrecy.
-   *
-   * The href is attached on the first hint of intent rather than on click, so
-   * the anchor is a genuine link by the time it is activated: middle-click,
-   * "open in new tab" and "copy link address" all behave normally. */
-  (function devContact() {
-    var link = $('[data-dev-contact]');
-    if (!link) return;
-
-    // Digits reversed, one per entry. Do NOT write the number in a comment
-    // here — the first version of this did, which put it straight back into
-    // the served file and undid the whole point.
-    var CODED = [6, 3, 3, 3, 9, 5, 1, 5, 9, 1, 2, 4];
-    var armed = false;
-
-    function arm() {
-      if (armed) return;
-      armed = true;
-      var digits = CODED.slice().reverse().map(function (d) { return String(d); }).join('');
-      link.setAttribute('href', 'https://wa.me/' + digits);
-      link.setAttribute('target', '_blank');
-      link.setAttribute('rel', 'noopener noreferrer');
-    }
-
-    // pointerdown fires before click; focus covers the keyboard path.
-    link.addEventListener('pointerdown', arm);
-    link.addEventListener('focus', arm);
-    link.addEventListener('mouseenter', arm);
-    // Safety net: if a click somehow arrives unarmed, arm and follow it here.
-    link.addEventListener('click', function (e) {
-      if (link.getAttribute('href')) return;
-      e.preventDefault();
-      arm();
-      window.open(link.getAttribute('href'), '_blank', 'noopener');
-    });
-
-    // Focusable from the keyboard even before it has an href.
-    if (!link.hasAttribute('tabindex')) link.setAttribute('tabindex', '0');
-  })();
-
   /* ------------------------------------------------------------- header */
   (function header() {
     var el = $('[data-header]');

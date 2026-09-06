@@ -128,9 +128,8 @@ function footer(t) {
       </ul>
     </div>
   </div>
-  <div class="shell mt-12 flex flex-col gap-2 border-t border-line pt-6 text-tiny sm:flex-row sm:justify-between">
+  <div class="shell mt-12 border-t border-line pt-6 text-tiny">
     <p>© ${new Date().getFullYear()} ${esc(site.brandFull)}. ${esc(t.footer.rights)}</p>
-    <p>${esc(t.footer.credit)} <a data-dev-contact class="${tap('cursor-pointer font-medium text-frost/70 underline decoration-white/20 underline-offset-2 hover:text-ice')}">${esc(t.footer.creditName)}</a></p>
   </div>
 </footer>
 <button type="button" data-totop hidden class="fixed bottom-5 right-5 z-30 inline-flex h-12 w-12 items-center justify-center rounded-pill bg-ink-3 text-frost shadow-lift hover:bg-accent" aria-label="${esc(t.footer.backToTop)}">${icon('arrowUp')}</button>`;
