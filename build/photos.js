@@ -20,7 +20,37 @@ const source = (name) => {
 };
 const kb = (f) => Math.round(fs.statSync(f).size / 1024);
 
-function brandedShare() {
+async function brandedShare() {
+  const logo = path.join(IMG, 'logo.png');
+  const ink = { r: 7, g: 9, b: 12, alpha: 1 };
+  if (fs.existsSync(logo)) {
+    const lockup = await sharp(logo).flatten({ background: ink }).png().toBuffer();
+    const trimmed = await sharp(lockup).trim().png().toBuffer();
+    const trimMeta = await sharp(trimmed).metadata();
+    const side = trimMeta.height;
+    const mark = await sharp(trimmed)
+      .extract({ left: 0, top: 0, width: Math.min(side, trimMeta.width), height: side })
+      .resize(180, 180)
+      .png({ compressionLevel: 9 })
+      .toBuffer();
+    const word = await sharp(lockup).resize({ width: 880, withoutEnlargement: true }).png().toBuffer();
+    const wordMeta = await sharp(word).metadata();
+    const og = await sharp({
+      create: { width: 1200, height: 630, channels: 3, background: ink },
+    })
+      .composite([{ input: word, left: Math.round((1200 - wordMeta.width) / 2), top: Math.round((630 - wordMeta.height) / 2) }])
+      .jpeg({ quality: 88, mozjpeg: true })
+      .toFile(path.join(IMG, 'og.jpg'));
+    fs.writeFileSync(path.join(SITE, 'favicon.svg'), faviconSvg());
+    await sharp(mark).toFile(path.join(SITE, 'apple-touch-icon.png'));
+    await sharp(mark).resize(32, 32).png({ compressionLevel: 9 }).toFile(path.join(SITE, 'favicon-32.png'));
+    return [
+      ['og.jpg', `${og.width}x${og.height}`],
+      ['apple-touch-icon.png', '180x180'],
+      ['favicon-32.png', '32x32'],
+      ['favicon.svg', 'vector'],
+    ];
+  }
   fs.writeFileSync(path.join(SITE, 'favicon.svg'), faviconSvg());
   const og = Buffer.from(ogSvg());
   const mark = Buffer.from(markSvg(180));
@@ -34,7 +64,6 @@ function brandedShare() {
 
 function pruneStale() {
   const stale = [
-    'logo.png',
     'about.jpg', 'yard.jpg', 'hall.jpg',
     'hero-wide.jpg', 'hero-tall.jpg',
     'hero2-wide.jpg', 'hero2-tall.jpg',

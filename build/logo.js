@@ -1,4 +1,4 @@
-/* Brand marks for favicon + Open Graph. Header uses live type in templates.js. */
+/* Brand marks for favicon + Open Graph. Header uses site/img/logo.png. */
 const RED = '#c4121a';
 const INK = '#07090c';
 const FROST = '#e8f4fa';

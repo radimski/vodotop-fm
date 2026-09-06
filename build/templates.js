@@ -53,18 +53,12 @@ function mapsLink(inner, cls = '') {
   return `<a class="${tap(cls)}" href="${site.mapUrl}" target="_blank" rel="noopener noreferrer">${inner}</a>`;
 }
 
-function logoLockup() {
-  return `<span class="logo-word" aria-hidden="true"><span class="logo-vo">VO</span><span class="logo-do">do</span><span class="logo-top">TOP</span></span>
-    <span class="logo-side" aria-hidden="true">
-      <span class="logo-fm">FM</span>
-      <span class="logo-sro">s.r.o.</span>
-    </span>`;
+function logoImg() {
+  return '<img class="h-10 w-auto sm:h-12" src="img/logo.png" width="544" height="130" alt="VODOTOP FM s.r.o.">';
 }
 
 function logoLink() {
-  return `<a href="index.html" class="logo shrink-0" aria-label="VODOTOP FM s.r.o. — úvod">
-    ${logoLockup()}
-  </a>`;
+  return `<a href="index.html" class="logo shrink-0" aria-label="VODOTOP FM s.r.o. — úvod">${logoImg()}</a>`;
 }
 
 function header(t, currentFile) {
@@ -111,7 +105,7 @@ function footer(t) {
   return `<footer class="border-t border-line bg-ink-2 pb-10 pt-16 text-muted">
   <div class="shell grid gap-10 md:grid-cols-2 lg:grid-cols-4">
     <div>
-      <div class="logo logo--foot">${logoLockup()}</div>
+      <div class="logo logo--foot">${logoImg()}</div>
       <p class="mt-3 text-small">${esc(t.footer.tagline)}</p>
     </div>
     <div>
@@ -139,10 +133,7 @@ function footer(t) {
     <p>${esc(t.footer.credit)} <a data-dev-contact class="${tap('cursor-pointer font-medium text-frost/70 underline decoration-white/20 underline-offset-2 hover:text-ice')}">${esc(t.footer.creditName)}</a></p>
   </div>
 </footer>
-<button type="button" data-totop hidden class="fixed bottom-5 right-5 z-30 inline-flex h-12 w-12 items-center justify-center rounded-pill bg-ink-3 text-frost shadow-lift hover:bg-accent" aria-label="${esc(t.footer.backToTop)}">${icon('arrowUp')}</button>
-<div class="call-bar" role="region" aria-label="${esc(t.common.call)} ${esc(phoneLocal())}">
-  <a href="tel:${site.phoneHref}">${icon('phone', 'h-5 w-5')}${esc(t.common.call)} ${esc(phoneLocal())}</a>
-</div>`;
+<button type="button" data-totop hidden class="fixed bottom-5 right-5 z-30 inline-flex h-12 w-12 items-center justify-center rounded-pill bg-ink-3 text-frost shadow-lift hover:bg-accent" aria-label="${esc(t.footer.backToTop)}">${icon('arrowUp')}</button>`;
 }
 
 function heroPipes() {
