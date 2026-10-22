@@ -1,7 +1,7 @@
 /* Language-independent facts about the business + build switches. */
 module.exports = {
   origin: 'https://www.vodotop-fm.cz',
-  assetVersion: 25,
+  assetVersion: 26,
 
   // Production floor is 2592000 (30 days). 300s only proved the header arrives
   // on a live host; this site is not live yet, so it starts at the floor.

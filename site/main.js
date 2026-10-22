@@ -823,6 +823,41 @@
     }
   })();
 
+  /* ------------------------------------------------- motion (GSAP) */
+  /* One moment only: the house schema draws its four installations one after
+   * another the first time it scrolls into view. GSAP is
+   * self-hosted and only loaded on the pages that use it. Without it, on
+   * phones, or with reduced motion, everything is simply shown. */
+  (function motion() {
+    var gsap = window.gsap;
+    if (!gsap || reduceMotion) return;
+    if (window.ScrollTrigger) gsap.registerPlugin(window.ScrollTrigger);
+    var mm = gsap.matchMedia();
+
+    var house = $('[data-house]');
+    if (!house || !window.ScrollTrigger) return;
+    var stage = house.parentElement;
+    mm.add('(min-width: 1024px)', function () {
+      document.documentElement.classList.add('gsap-on');
+      // No pinning: holding the page while scrolling was tiresome. The drawing
+      // plays once, on its own, when the schema comes into view.
+      var tl = gsap.timeline({
+        defaults: { ease: 'power2.out' },
+        scrollTrigger: { trigger: stage, start: 'top 70%', once: true },
+      });
+      ['voda', 'topeni', 'plyn', 'elektro'].forEach(function (id, i) {
+        var inner = $('[data-layer="' + id + '"] [data-lay-in]', house);
+        var row = $('[data-layer-row="' + id + '"] [data-row-in]');
+        var flows = $$('.flow', inner);
+        var at = i * 0.55;
+        tl.fromTo(inner, { opacity: 0.08 }, { opacity: 1, duration: 0.4 }, at);
+        if (flows.length) tl.fromTo(flows, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.9, ease: 'power1.inOut' }, at);
+        if (row) tl.fromTo(row, { opacity: 0.35 }, { opacity: 1, duration: 0.4 }, at);
+      });
+      return function () { document.documentElement.classList.remove('gsap-on'); };
+    });
+  })();
+
   /* ---------------------------------------- reference map <-> list sync */
   (function refMap() {
     var pts = $$('[data-place]');
@@ -914,25 +949,57 @@
       if (epsNameW) epsNameW.setAttribute('x', 114 + px / 2);
     }
 
+    // Numbers roll to the new value (GSAP if present), so a change reads as a change.
+    function setNum(el, value, dec) {
+      var g = window.gsap;
+      if (!g || reduceMotion) { el.textContent = fmt(value, dec); return; }
+      var from = { v: el._v === undefined ? value : el._v };
+      el._v = value;
+      // <output> is a live region: busy while rolling, so screen readers hear only the final value.
+      el.setAttribute("aria-busy", "true");
+      g.to(from, { v: value, duration: 0.45, ease: "power2.out", overwrite: true,
+        onUpdate: function () { el.textContent = fmt(from.v, dec); },
+        onComplete: function () { el.textContent = fmt(value, dec); el.setAttribute("aria-busy", "false"); } });
+    }
+
+    // "12,5" and "1 250,5" (comma = decimals); "1.250" or "12.500" = thousands.
+    function parseArea(raw) {
+      var v = String(raw).replace(/\s/g, '');
+      if (v.indexOf(',') !== -1) v = v.replace(/\./g, '').replace(',', '.');
+      else if (/^\d{1,3}(\.\d{3})+$/.test(v)) v = v.replace(/\./g, '');
+      return parseFloat(v);
+    }
+    var empty = $('[data-calc-empty]', root);
+    // 1 deska, 2–4 desky, 5+ desek
+    function boardWord(n) { return n === 1 ? 'deska' : n >= 2 && n <= 4 ? 'desky' : 'desek'; }
+
     function update() {
-      var a = parseFloat(String(area.value).replace(',', '.'));
+      // Czech phones type a decimal comma; accept both, ignore spaces, cap the area.
+      var a = parseArea(area.value);
       if (!isFinite(a) || a < 0) a = 0;
+      a = Math.min(a, 100000);
       var t = parseFloat(thick.value) || 0;
       var k = reserve.checked ? 1.05 : 1;
       var m2 = a * k;
       var vol = m2 * t / 1000;
       var boards = Math.ceil(m2 / 0.5);
-      outVol.textContent = fmt(vol, vol < 10 ? 2 : 1);
-      outBoards.textContent = fmt(boards, 0);
+      var volDec = vol < 10 ? 2 : 1;
+      setNum(outVol, vol, volDec);
+      setNum(outBoards, boards, 0);
       drawCut(t);
-      var qty = fmt(a, 0) + ' m², ' + t + ' mm, ' + type + ' (cca ' + fmt(vol, 1) + ' m³, ' + boards + ' desek)';
-      cta.href = 'kontakty.html?typ=' + encodeURIComponent('Polystyren EPS') + '&mnozstvi=' + encodeURIComponent(qty) + '#poptavka';
+      var base = 'kontakty.html?typ=' + encodeURIComponent('Polystyren EPS');
+      area.setAttribute('aria-invalid', a > 0 ? 'false' : 'true');
+      if (empty) empty.hidden = a > 0;
+      if (a <= 0) { cta.href = base + '#poptavka'; return; }
+      var qty = fmt(a, a % 1 ? 1 : 0) + ' m², ' + t + ' mm, ' + type +
+        ' (cca ' + fmt(vol, volDec) + ' m³, ' + fmt(boards, 0) + ' ' + boardWord(boards) + ')';
+      cta.href = base + '&mnozstvi=' + encodeURIComponent(qty) + '#poptavka';
     }
     chips.forEach(function (chip) {
       chip.addEventListener('click', function () {
         type = chip.getAttribute('data-calc-type');
         chips.forEach(function (c) { c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'); });
-        if (note) note.textContent = chip.getAttribute('title') || '';
+        if (note) note.textContent = chip.getAttribute('data-desc') || '';
         update();
       });
     });

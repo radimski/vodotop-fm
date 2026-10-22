@@ -46,7 +46,7 @@ module.exports = {
         xl: '12px',
         pill: '100px',
       },
-      maxWidth: { shell: '1280px', prose: '66ch' },
+      maxWidth: { shell: '1360px', prose: '66ch' },
       spacing: { section: 'clamp(4rem, 9vw, 7.5rem)' },
       boxShadow: {
         lift: '0 1px 2px rgba(20,24,30,.06), 0 12px 32px -16px rgba(20,24,30,.25)',

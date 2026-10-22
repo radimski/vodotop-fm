@@ -34,7 +34,10 @@
 
 @layer components {
   .shell {
-    @apply mx-auto w-full max-w-shell px-4 sm:px-8;
+    @apply mx-auto w-full max-w-shell;
+    /* Side margin grows with the window: ~22 px on a phone, ~70 px on a laptop. */
+    padding-left: clamp(1.375rem, 5vw, 4.5rem);
+    padding-right: clamp(1.375rem, 5vw, 4.5rem);
   }
   /* Dimension-style label, like the text along a kóta on a drawing. */
   .tag {
@@ -281,36 +284,39 @@
 }
 .part:hover::before,
 .part.is-open::before { transform: scaleX(1); }
+/* Inner padding so text never touches the highlighted row background. */
+.part-body > div > div { padding-left: 1rem; padding-right: 1rem; }
+@media (min-width: 768px) {
+  .part-body > div > div { padding-left: 1.5rem; padding-right: 1.5rem; }
+}
 .part-title { display: inline-block; transition: transform .25s ease, color .2s ease; }
 
 .part-btn {
   width: 100%;
   text-align: left;
   display: grid;
-  grid-template-columns: 3.25rem 1fr auto;
+  grid-template-columns: 1fr auto;
   align-items: center;
   gap: 0.75rem;
   min-height: 76px;
-  padding: 14px 0;
+  padding: 14px 1rem;
 }
 @media (min-width: 768px) {
-  .part-btn { grid-template-columns: 5rem 1fr 1.1fr auto; min-height: 96px; }
+  .part-btn { grid-template-columns: 1fr 1.1fr auto; gap: 1.5rem; min-height: 88px; padding-left: 1.5rem; padding-right: 1.5rem; }
 }
 .part-btn:hover .part-title { color: theme('colors.red'); }
 .part-plus {
-  width: 40px;
-  height: 40px;
-  border: 1.5px solid theme('colors.line');
-  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  color: theme('colors.muted');
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: transform .25s ease, background .2s ease, color .2s ease;
 }
 .part-btn[aria-expanded='true'] .part-plus {
-  transform: rotate(45deg);
-  background: theme('colors.ink');
-  color: #fff;
+  transform: rotate(180deg);
+  color: theme('colors.ink');
 }
 .part-body {
   display: grid;
@@ -343,13 +349,13 @@
   min-height: 52px;
   background: transparent;
   border: 0;
-  border-bottom: 2px solid rgba(160, 196, 240, .55);
-  color: #fff;
+  border-bottom: 2px solid #cfc8bb;
+  color: theme('colors.ink');
   font-size: 1.5rem;
   font-weight: 700;
   padding: 6px 0;
 }
-.calc-field:focus { outline: none; border-bottom-color: #fff; }
+.calc-field:focus { outline: none; border-bottom-color: theme('colors.blue'); }
 .calc-field option { color: theme('colors.ink'); }
 .calc-out {
   font-variant-numeric: tabular-nums;
@@ -357,13 +363,14 @@
 .chip-on-print {
   min-height: 44px;
   padding: 0 14px;
-  border: 1.5px solid rgba(160, 196, 240, .55);
-  color: #fff;
+  border: 1.5px solid theme('colors.line');
+  background: #fff;
+  color: theme('colors.ink');
   font-size: .875rem;
   font-weight: 600;
   border-radius: 6px;
 }
-.chip-on-print[aria-pressed='true'] { background: #fff; color: theme('colors.print'); border-color: #fff; }
+.chip-on-print[aria-pressed='true'] { background: theme('colors.ink'); color: #fff; border-color: theme('colors.ink'); }
 
 /* ------------------------------------------------ house layer schema */
 .house .lay-base { fill: none; stroke: theme('colors.ink'); stroke-width: 1.6; stroke-linejoin: round; }
@@ -381,6 +388,8 @@
 .house .flow { stroke-dasharray: 1; stroke-dashoffset: 1; }
 .is-visible .house .flow, .house .is-drawn .flow { animation: pipe-in 1.6s cubic-bezier(.3,.6,.1,1) forwards; }
 .is-visible .house .lay-topeni .flow { animation-delay: .3s; }
+/* Desktop with GSAP: the pinned scroll scene draws the layers instead. */
+.gsap-on .house .flow { animation: none; }
 .is-visible .house .lay-plyn .flow { animation-delay: .6s; }
 .layer-btn {
   display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px;
@@ -424,7 +433,7 @@
 .map-row.is-active { background: theme('colors.paper-2'); }
 
 /* -------------------------------------------- calculator section cut */
-.calc-cut .cut-text { font-family: theme('fontFamily.mono'); font-size: 10px; fill: #cfe2f7; }
+.calc-cut .cut-text { font-family: theme('fontFamily.mono'); font-size: 10px; fill: theme('colors.muted'); }
 .calc-cut .cut-text-dark { fill: theme('colors.print'); }
 .calc-cut rect, .calc-cut path { transition: all .35s cubic-bezier(.3,.6,.1,1); }
 

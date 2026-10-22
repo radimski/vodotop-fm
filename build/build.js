@@ -98,7 +98,7 @@ function businessLd() {
   return ld;
 }
 
-function doc(headHtml, bodyHtml, withForm = false) {
+function doc(headHtml, bodyHtml, withForm = false, withMotion = false) {
   return `<!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -106,12 +106,15 @@ ${headHtml}
 </head>
 <body data-ga="${site.gaId}" data-form-endpoint="${site.formEndpoint}" data-lang="cs" data-copied="${T.esc(t.common.copied)}" data-turnstile-site-key="">
 ${bodyHtml}
-<script src="main.js?v=${v}" defer></script>${withForm ? `\n<script src="form.js?v=${v}" defer></script>` : ''}
+${withMotion ? `<script src="js/vendor/gsap.min.js?v=${v}" defer></script>
+<script src="js/vendor/ScrollTrigger.min.js?v=${v}" defer></script>
+` : ''}<script src="main.js?v=${v}" defer></script>${withForm ? `\n<script src="form.js?v=${v}" defer></script>` : ''}
 </body>
 </html>
 `;
 }
 
+const MOTION_PAGES = ['index.html', 'cinnost.html'];
 function page(file, title, desc, inner, withForm = false, extraLd = []) {
   const body = `${T.header(t, file)}
 <main id="obsah">
@@ -129,7 +132,8 @@ ${T.footer(t)}`;
         noindex: file === '404.html',
       }),
       body,
-      withForm
+      withForm,
+      MOTION_PAGES.includes(file)
     )
   );
 }
@@ -148,6 +152,11 @@ fs.rmSync(path.join(SITE, 'fotogalerie.html'), { force: true });
 
 fs.copyFileSync(path.join(__dirname, 'main.js'), path.join(SITE, 'main.js'));
 fs.copyFileSync(path.join(__dirname, 'form.js'), path.join(SITE, 'form.js'));
+// GSAP is self-hosted (rulebook §2: zero third parties at runtime).
+fs.mkdirSync(path.join(SITE, 'js', 'vendor'), { recursive: true });
+for (const f of ['gsap.min.js', 'ScrollTrigger.min.js']) {
+  fs.copyFileSync(path.join(ROOT, 'node_modules', 'gsap', 'dist', f), path.join(SITE, 'js', 'vendor', f));
+}
 console.log('copied main.js form.js');
 
 const pages = [

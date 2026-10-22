@@ -10,7 +10,6 @@ const LADDER = [400, 800, 1200, 1600];
 
 const esc = (s = '') =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const pad = (n) => String(n).padStart(2, '0');
 
 function webpSrcset(m) {
   const base = m.file.replace(/\.jpe?g$/i, '');
@@ -43,6 +42,7 @@ const icons = {
   arrow: `<path ${S} d="M4 12h15M13 6l6 6-6 6"/>`,
   arrowUp: `<path ${S} d="M12 20V5M6 11l6-6 6 6"/>`,
   plus: `<path ${S} d="M12 5v14M5 12h14"/>`,
+  chevron: `<path ${S} stroke-linejoin="round" d="m6 9 6 6 6-6"/>`,
   pin: `<path ${S} stroke-linejoin="round" d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11"/><circle ${S} cx="12" cy="10" r="2.6"/>`,
   mail: `<path ${S} d="M3 5h18v14H3zM3.8 6.5 12 13l8.2-6.5"/>`,
   check: `<path ${S} stroke-width="2.2" d="M20 6L9 17l-5-5"/>`,
@@ -190,27 +190,31 @@ ${legalDialog(t.legalLinks.cookies.hash, 'legal-cookies-title', legalDocs.cookie
 
 /* ------------------------------------------------------------- pieces */
 function sectionTop(num, tag, title, lead = '', { h = 'h2', light = false } = {}) {
-  return `<div class="grid gap-5 lg:grid-cols-[1.1fr_.9fr] lg:items-end">
-      <div>
-        <p class="tag ${light ? 'text-cyan' : 'tag-red'}">${esc(tag)}</p>
-        <${h} class="mt-4 text-display-xl${light ? ' text-white' : ''}">${esc(title)}</${h}>
-      </div>
-      ${lead ? `<p class="text-lead ${light ? 'text-white/80' : 'text-muted'} lg:pb-2">${esc(lead)}</p>` : ''}
+  return `<div class="max-w-2xl">
+      <${h} class="text-display-xl${light ? ' text-white' : ''}">${esc(title)}</${h}>
+      ${lead ? `<p class="mt-4 text-lead ${light ? 'text-white/80' : 'text-muted'}">${esc(lead)}</p>` : ''}
     </div>`;
 }
 
 function callButtons(t, { light = false } = {}) {
   return `<div class="flex flex-wrap gap-3">
       <a class="btn-primary" href="tel:${site.phoneHref}">${icon('phone')}${esc(t.common.call)} ${esc(local(site.phone))}</a>
-      <a class="${light ? 'btn-on-print' : 'btn-line'}" href="${inquiryHref()}">${esc(t.common.inquiry)}${icon('arrow')}</a>
+      <a class="${light ? 'btn-on-print' : 'btn-line'}" href="${inquiryHref()}">${esc(t.common.inquiry)}</a>
     </div>`;
 }
 
-function pageHead(t, tag, title, lead) {
+function pageHead(t, tag, title, lead, photo) {
+  // Optional real photo of the company on the right, so subpages open with something of theirs.
+  const pic = photo
+    ? `<div class="hidden md:block">${img(photo.slug, { cls: 'aspect-[4/3] h-auto w-full rounded object-cover', alt: photo.alt, eager: true, sizes: '(min-width:1024px) 420px, 40vw' })}</div>`
+    : '';
   return `<section class="grid-paper border-b border-line">
-  <div class="shell py-12 sm:py-16 lg:py-20">
-    ${sectionTop('', tag, title, lead, { h: 'h1' })}
-    <div class="pipe pipe-draw reveal mt-10 w-32"></div>
+  <div class="shell grid items-center gap-10 py-12 sm:py-16 ${photo ? 'md:grid-cols-[1.3fr_.7fr] lg:py-14' : 'lg:py-20'}">
+    <div>
+      <h1 class="text-display-xl">${esc(title)}</h1>
+      ${lead ? `<p class="mt-4 max-w-2xl text-lead text-muted">${esc(lead)}</p>` : ''}
+    </div>
+    ${pic}
   </div>
 </section>`;
 }
@@ -224,16 +228,14 @@ function partsList(t, { openFirst = true } = {}) {
       return `<li class="part${open ? ' is-open' : ''}" data-part>
         <h3>
           <button type="button" class="part-btn" aria-expanded="${open}" aria-controls="part-${g.id}" data-part-btn>
-            <span class="tag tag-red">${pad(i + 1)}</span>
             <span class="part-title text-display-md cond">${esc(g.h)}</span>
-            <span class="hidden text-small text-muted md:block">${esc(g.items.slice(0, 2).join(' · '))}</span>
-            <span class="part-plus">${icon('plus')}</span>
+            <span class="hidden text-small text-muted md:block">${esc(g.items.slice(0, 2).join(', '))}</span>
+            <span class="part-plus">${icon('chevron')}</span>
           </button>
         </h3>
         <div class="part-body" id="part-${g.id}">
           <div>
-            <div class="grid gap-5 pb-8 md:grid-cols-[5rem_1fr_1.1fr_auto] md:gap-3">
-              <span class="hidden md:block"></span>
+            <div class="grid gap-5 pb-8 md:grid-cols-[1fr_1.1fr_auto] md:gap-6">
               <p class="max-w-md text-muted">${esc(g.p)}</p>
               <ul class="grid gap-2 text-small">${items}</ul>
               <p class="flex flex-col gap-1 md:items-end"><a class="link" href="cinnost.html#${g.id}">Detail</a><a class="link" href="${inquiryHref(g.h)}">${esc(s.inquiry)}</a></p>
@@ -249,38 +251,37 @@ function calculator(t) {
   const c = t.home.calc;
   const thick = [20, 30, 40, 50, 60, 80, 100, 120, 140, 150, 160, 180, 200, 220, 240, 250, 300];
   const chips = c.types
-    .map(([v, d], i) => `<button type="button" class="chip-on-print" data-calc-type="${esc(v)}" aria-pressed="${i === 0}" title="${esc(d)}">${esc(v)}</button>`)
+    .map(([v, d], i) => `<button type="button" class="chip-on-print" data-calc-type="${esc(v)}" aria-pressed="${i === 0}" data-desc="${esc(d)}">${esc(v)}</button>`)
     .join('');
-  return `<section id="kalkulacka" class="blueprint py-section">
+  return `<section id="kalkulacka" class="border-y border-line bg-paper-2 py-section">
   <div class="shell grid gap-12 lg:grid-cols-[.95fr_1.05fr] lg:gap-16">
     <div>
-      <p class="tag text-cyan">${esc(c.tag)}</p>
-      <h2 class="mt-4 text-display-xl text-white">${esc(c.title)}</h2>
-      <p class="mt-5 max-w-lg text-lead text-white/80">${esc(c.lead)}</p>
-      <figure class="mt-10 border border-cyan/40 p-4 sm:p-5" aria-hidden="true">
-        <figcaption class="flex justify-between tag text-cyan"><span>${esc(c.section)}</span><span data-calc-section-name>${esc(c.sections.wall)}</span></figcaption>
+      <h2 class="text-display-xl">${esc(c.title)}</h2>
+      <p class="mt-4 max-w-lg text-lead text-muted">${esc(c.lead)}</p>
+      <figure class="mt-10 rounded border border-line bg-white p-4 sm:p-5" aria-hidden="true">
+        <figcaption class="flex justify-between tag text-muted"><span>${esc(c.section)}</span><span data-calc-section-name>${esc(c.sections.wall)}</span></figcaption>
         <svg class="calc-cut mt-3 h-auto w-full" viewBox="0 0 300 190">
           <defs>
-            <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0v8" stroke="rgba(160,196,240,.55)" stroke-width="1.2"/></pattern>
-            <pattern id="beads" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="1.4" fill="rgba(15,42,79,.28)"/></pattern>
+            <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0v8" stroke="rgba(20,24,30,.45)" stroke-width="1.2"/></pattern>
+            <pattern id="beads" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="1.4" fill="rgba(20,24,30,.25)"/></pattern>
           </defs>
           <g data-cut="wall">
-            <rect x="20" y="22" width="90" height="148" fill="url(#hatch)" stroke="#9cc7f2"/>
-            <rect x="110" y="22" width="4" height="148" fill="#9cc7f2"/>
-            <rect class="cut-eps" x="114" y="22" width="55" height="148" fill="#fff" data-cut-eps-w/>
+            <rect x="20" y="22" width="90" height="148" fill="url(#hatch)" stroke="#14181e"/>
+            <rect x="110" y="22" width="4" height="148" fill="#14181e"/>
+            <rect class="cut-eps" x="114" y="22" width="55" height="148" fill="#fff" stroke="#14181e" data-cut-eps-w/>
             <rect class="cut-eps" x="114" y="22" width="55" height="148" fill="url(#beads)" data-cut-eps-w/>
             <rect x="169" y="22" width="6" height="148" fill="#c9d9ee" data-cut-render/>
-            <path stroke="#fff" stroke-width="1" fill="none" d="M114 12h55M114 7v10M169 7v10" data-cut-dim-w/>
+            <path stroke="#14181e" stroke-width="1" fill="none" d="M114 12h55M114 7v10M169 7v10" data-cut-dim-w/>
             <text x="141" y="9" class="cut-text" text-anchor="middle" data-cut-label-w>160 mm</text>
             <text x="65" y="185" class="cut-text" text-anchor="middle">${esc(c.layersWall[0])}</text>
             <text x="141" y="185" class="cut-text" text-anchor="middle" data-cut-eps-name-w>EPS</text>
           </g>
           <g data-cut="floor" display="none">
             <rect x="20" y="20" width="230" height="22" fill="#c9d9ee"/>
-            <rect class="cut-eps" x="20" y="42" width="230" height="55" fill="#fff" data-cut-eps-h/>
+            <rect class="cut-eps" x="20" y="42" width="230" height="55" fill="#fff" stroke="#14181e" data-cut-eps-h/>
             <rect class="cut-eps" x="20" y="42" width="230" height="55" fill="url(#beads)" data-cut-eps-h/>
-            <rect x="20" y="97" width="230" height="40" fill="url(#hatch)" stroke="#9cc7f2" data-cut-slab/>
-            <path stroke="#fff" stroke-width="1" fill="none" d="M262 42v55M257 42h10M257 97h10" data-cut-dim-h/>
+            <rect x="20" y="97" width="230" height="40" fill="url(#hatch)" stroke="#14181e" data-cut-slab/>
+            <path stroke="#14181e" stroke-width="1" fill="none" d="M262 42v55M257 42h10M257 97h10" data-cut-dim-h/>
             <text x="270" y="73" class="cut-text" data-cut-label-h>160 mm</text>
             <text x="26" y="35" class="cut-text cut-text-dark">${esc(c.layersFloor[0])}</text>
             <text x="26" y="62" class="cut-text cut-text-dark" data-cut-eps-name-h>EPS</text>
@@ -289,25 +290,26 @@ function calculator(t) {
         </svg>
       </figure>
     </div>
-    <div class="border border-cyan/50 bg-print-2/60 p-5 sm:p-8" data-calc data-cut-names="${esc(JSON.stringify(c.sections))}">
+    <div class="rounded border border-line bg-white p-5 sm:p-8" data-calc data-cut-names="${esc(JSON.stringify(c.sections))}">
       <div class="grid gap-7 sm:grid-cols-2">
-        <label class="block" for="calc-area"><span class="tag text-cyan">${esc(c.area)}</span>
-          <input id="calc-area" class="calc-field" type="number" inputmode="decimal" min="1" max="100000" step="1" value="100" data-calc-area></label>
-        <label class="block" for="calc-thick"><span class="tag text-cyan">${esc(c.thickness)}</span>
+        <label class="block" for="calc-area"><span class="tag text-muted">${esc(c.area)}</span>
+          <input id="calc-area" class="calc-field" type="text" inputmode="decimal" autocomplete="off" maxlength="9" value="100" aria-describedby="calc-area-empty" data-calc-area></label>
+        <label class="block" for="calc-thick"><span class="tag text-muted">${esc(c.thickness)}</span>
           <select id="calc-thick" class="calc-field" data-calc-thick>${thick.map((n) => `<option value="${n}"${n === 160 ? ' selected' : ''}>${n} mm</option>`).join('')}</select></label>
       </div>
       <fieldset class="mt-8">
-        <legend class="tag text-cyan">${esc(c.type)}</legend>
+        <legend class="tag text-muted">${esc(c.type)}</legend>
         <div class="mt-3 flex flex-wrap gap-2">${chips}</div>
-        <p class="mt-3 text-small text-white/70" data-calc-type-note>${esc(c.types[0][1])}</p>
+        <p class="mt-3 text-small text-muted" aria-live="polite" data-calc-type-note>${esc(c.types[0][1])}</p>
       </fieldset>
-      <label class="mt-6 flex min-h-11 items-center gap-3 text-small" for="calc-reserve"><input id="calc-reserve" type="checkbox" class="h-5 w-5 accent-white" checked data-calc-reserve>${esc(c.reserve)}</label>
-      <dl class="mt-6 grid grid-cols-2 border-t border-cyan/50">
-        <div class="border-r border-cyan/30 pt-5 pr-4"><dt class="tag text-cyan">${esc(c.volume)}</dt><dd class="calc-out mt-2 text-display-xl text-white"><output data-calc-volume>16,8</output> <span class="text-display-sm">m³</span></dd></div>
-        <div class="pt-5 pl-4 sm:pl-6"><dt class="tag text-cyan">${esc(c.boards)}</dt><dd class="calc-out mt-2 text-display-xl text-white"><output data-calc-boards>210</output> <span class="text-display-sm">ks</span></dd></div>
+      <label class="mt-6 flex min-h-11 items-center gap-3 text-small" for="calc-reserve"><input id="calc-reserve" type="checkbox" class="h-5 w-5" checked data-calc-reserve>${esc(c.reserve)}</label>
+      <dl class="mt-6 grid grid-cols-2 border-t border-line">
+        <div class="border-r border-line pt-5 pr-4"><dt class="tag text-muted">${esc(c.volume)}</dt><dd class="calc-out mt-2 text-display-xl"><output data-calc-volume>16,8</output> <span class="text-display-sm">m³</span></dd></div>
+        <div class="pt-5 pl-4 sm:pl-6"><dt class="tag text-muted">${esc(c.boards)}</dt><dd class="calc-out mt-2 text-display-xl"><output data-calc-boards>210</output> <span class="text-display-sm">ks</span></dd></div>
       </dl>
-      <p class="mt-5 text-tiny text-white/65">${esc(c.note)}</p>
-      <a class="btn-primary mt-6 w-full sm:w-auto" href="${inquiryHref('Polystyren EPS')}" data-calc-cta>${esc(c.cta)}${icon('arrow')}</a>
+      <p id="calc-area-empty" class="mt-5 text-small font-semibold text-red-dark" data-calc-empty hidden>${esc(c.empty)}</p>
+      <p class="mt-5 text-tiny text-muted">${esc(c.note)}</p>
+      <a class="btn-primary mt-6 w-full sm:w-auto" href="${inquiryHref('Polystyren EPS')}" data-calc-cta>${esc(c.cta)}</a>
     </div>
   </div>
 </section>`;
@@ -329,32 +331,32 @@ function layersSection(t) {
     <rect x="390" y="196" width="60" height="44"/><rect x="520" y="196" width="50" height="44"/><rect x="390" y="330" width="60" height="44"/><rect x="230" y="330" width="44" height="44"/>
     ${room(182, 252, r2l)}${room(352, 266, r2r)}${room(182, 392, r1l)}${room(352, 400, r1r)}${room(180, 500, r0)}
   </g>
-  <g class="lay lay-voda" data-layer="voda">
+  <g class="lay lay-voda" data-layer="voda"><g data-lay-in>
     <path class="flow" pathLength="1" d="M0 486h112M128 486h42V200"/><circle cx="120" cy="486" r="8"/><text x="104" y="474" class="lay-tag">VDM</text>
     <path class="flow" pathLength="1" d="M170 418h80M170 283h60"/>
     <rect x="250" y="404" width="34" height="14"/><rect x="230" y="276" width="78" height="24" rx="10"/>
     <path class="lay-dash" d="M292 300V507H8"/>
-  </g>
-  <g class="lay lay-topeni" data-layer="topeni">
+  </g></g>
+  <g class="lay lay-topeni" data-layer="topeni"><g data-lay-in>
     <rect x="410" y="452" width="58" height="50"/><text x="439" y="481" text-anchor="middle" class="lay-tag">KOTEL</text>
     <path class="flow" pathLength="1" d="M468 470h14V292M482 428H108M482 428h106M482 292H108M482 292h106"/>
     ${rad(110, 398)}${rad(540, 398)}${rad(110, 262)}${rad(540, 262)}
-  </g>
-  <g class="lay lay-plyn" data-layer="plyn">
+  </g></g>
+  <g class="lay lay-plyn" data-layer="plyn"><g data-lay-in>
     <rect x="18" y="378" width="36" height="24"/><text x="21" y="395" class="lay-tag">HUP</text>
     <path class="flow" pathLength="1" d="M54 390h12v74h344M318 464v-48"/>
     <rect x="304" y="402" width="30" height="14"/><circle cx="312" cy="409" r="3"/><circle cx="326" cy="409" r="3"/>
-  </g>
-  <g class="lay lay-elektro" data-layer="elektro">
+  </g></g>
+  <g class="lay lay-elektro" data-layer="elektro"><g data-lay-in>
     <rect x="560" y="326" width="24" height="40"/><text x="554" y="350" text-anchor="end" class="lay-tag">RE</text>
     <path class="lay-dash" d="M572 326V317H210M584 340V182H210M572 366v54H400"/>
     ${lamp(210, 317)}${lamp(470, 317)}${lamp(210, 182)}${lamp(470, 182)}<rect x="392" y="414" width="14" height="12"/>
-  </g>
+  </g></g>
 </svg>`;
   const btns = [`<button type="button" class="layer-btn" data-layer-all aria-pressed="true">${esc(c.all)}</button>`]
     .concat(c.items.map((i) => `<button type="button" class="layer-btn layer-btn-${i.id}" data-layer-btn="${i.id}" aria-pressed="true"><span class="layer-swatch" aria-hidden="true"></span>${esc(i.label)}</button>`))
     .join('');
-  const legend = c.items.map((i) => `<li class="layer-row" data-layer-row="${i.id}"><span class="layer-line layer-line-${i.id}" aria-hidden="true"></span><span><strong class="cond">${esc(i.label)}</strong><span class="block text-small text-muted">${esc(i.p)}</span></span></li>`).join('');
+  const legend = c.items.map((i) => `<li class="layer-row" data-layer-row="${i.id}"><span class="layer-line layer-line-${i.id}" aria-hidden="true"></span><span data-row-in><strong class="cond">${esc(i.label)}</strong><span class="block text-small text-muted">${esc(i.p)}</span></span></li>`).join('');
   return `<section class="grid-paper border-b border-line py-section">
   <div class="shell">
     ${sectionTop('01', c.tag, c.title, c.lead)}
@@ -403,19 +405,12 @@ function mapSection(t) {
     })
     .join('');
   const byKm = [...places].sort((a, b) => a.km - b.km);
-  const list = m.bands
-    .map((b, bi) => {
-      const items = byKm.filter((p) => p.band === bi);
-      if (!items.length) return '';
-      return `<li><p class="tag tag-red">${esc(b)}</p><ul class="mt-2 border-t border-line">${items
-        .map((p) => `<li class="map-row grid grid-cols-[1fr_auto] gap-3 border-b border-line py-2.5" data-place-row="${p.i}"><span><strong class="font-semibold">${esc(p.n)}</strong><span class="block text-small text-muted">${esc(p.w)}</span></span><span class="tag pt-1">${Math.round(p.km)} km</span></li>`)
-        .join('')}</ul></li>`;
-    })
+  const list = byKm
+    .map((p) => `<li class="map-row flex items-baseline justify-between gap-3 border-b border-line py-1.5" data-place-row="${p.i}" title="${esc(p.w)}"><span class="font-semibold">${esc(p.n)}</span><span class="text-tiny text-muted">${Math.round(p.km)} km</span></li>`)
     .join('');
-  return `<section class="border-b border-line bg-sheet py-section">
+  return `<section class="border-b border-line bg-sheet py-14 sm:py-16">
   <div class="shell">
-    ${sectionTop('04', m.tag, m.title, m.lead)}
-    <div class="mt-12 grid gap-10 lg:grid-cols-[1.15fr_.85fr] lg:items-start">
+    <div class="grid gap-8 md:grid-cols-[minmax(0,440px)_1fr] md:items-center lg:gap-14">
       <figure class="hidden rounded-xl border border-line bg-paper-2 p-3 md:block" data-map>
         <svg class="refmap h-auto w-full" viewBox="0 0 640 470" role="group" aria-label="${esc(m.tag)}">
           <path class="map-axis" d="M${cx} 10V460M10 ${cy}H630"/>
@@ -431,8 +426,10 @@ function mapSection(t) {
         </svg>
       </figure>
       <div>
-        <ul class="grid gap-6">${list}</ul>
-        <p class="mt-6"><a class="link" href="reference.html">${esc(m.more)}${icon('arrow', 'h-4 w-4')}</a></p>
+        <h2 class="text-display-md">${esc(m.title)}</h2>
+        <p class="mt-2 max-w-lg text-muted">${esc(m.lead)}</p>
+        <ul class="mt-5 grid grid-cols-2 gap-x-5 text-small sm:gap-x-8 sm:text-base">${list}</ul>
+        <p class="mt-4"><a class="link text-small" href="reference.html">${esc(m.more)}</a></p>
       </div>
     </div>
   </div>
@@ -445,19 +442,18 @@ function contactBand(t) {
   return `<section class="grid-paper border-t border-line py-section">
   <div class="shell grid gap-12 lg:grid-cols-[1.25fr_.75fr] lg:items-end">
     <div>
-      <p class="tag tag-red">${esc(h.contactEyebrow)}</p>
-      <h2 class="mt-4 max-w-2xl text-display-xl">${esc(h.contactTitle)}</h2>
+      <h2 class="max-w-2xl text-display-xl">${esc(h.contactTitle)}</h2>
       <p class="mt-8"><a class="cond inline-flex min-h-11 items-center text-hero hover:text-red" href="tel:${site.phoneHref}">${esc(local(site.phone))}</a></p>
       <p class="tag mt-3">${esc(t.common.hoursLabel)} ${esc(site.hours.label)}</p>
     </div>
-    <div class="border border-line bg-sheet p-6 shadow-lift">
+    <div class="rounded border border-line bg-white p-6">
       <p class="text-muted">${esc(h.contactLead)}</p>
       <ul class="mt-4 grid">
         <li>${mailLink(site.email, 'break-all font-semibold hover:text-red')}</li>
         <li>${mapsLink(addressHtml(', '), 'hover:text-red')}</li>
         <li class="mt-3 border-t border-line pt-3 text-small text-muted">${esc(h.contactUrgent)} ${telLink(boss.phoneHref, boss.phone, 'font-bold text-ink')}</li>
       </ul>
-      <a class="btn-primary mt-6 w-full" href="${inquiryHref()}">${esc(t.common.inquiry)}${icon('arrow')}</a>
+      <a class="btn-primary mt-6 w-full" href="${inquiryHref()}">${esc(t.common.inquiry)}</a>
     </div>
   </div>
 </section>`;
@@ -498,11 +494,13 @@ function home(t) {
     .join('');
   const details = h.who
     .map(
-      (w, i) => `<article class="detail reveal group p-6 sm:p-7">
+      (w, i) => `<article class="grid grid-cols-[88px_1fr] gap-5 border-t border-line py-7 sm:grid-cols-[140px_1fr_1fr] sm:gap-10">
         <svg class="sketch h-auto w-full text-ink" viewBox="0 0 160 150" aria-hidden="true">${sketches[i]}</svg>
-        <h3 class="mt-4 text-display-md cond">${esc(w.h)}</h3>
-        <p class="mt-3 text-muted">${esc(w.p)}</p>
-        <p class="mt-5 border-t border-line pt-4 text-small text-muted">${esc(w.ex)}</p>
+        <div>
+          <h3 class="text-display-md">${esc(w.h)}</h3>
+          <p class="mt-2 text-muted">${esc(w.p)}</p>
+        </div>
+        <p class="col-span-2 text-small text-muted sm:col-span-1 sm:pt-1">${esc(w.ex)}</p>
       </article>`
     )
     .join('');
@@ -513,11 +511,10 @@ function home(t) {
   return `<section class="hero grid-paper relative border-b border-line">
   <div class="shell relative grid gap-12 pb-14 pt-10 sm:pt-14 lg:min-h-[min(860px,calc(100svh-5rem))] lg:grid-cols-2 lg:items-center lg:py-16">
     <div class="relative z-10">
-      <p class="tag tag-red">${esc(h.eyebrow)}</p>
-      <h1 class="mt-4 max-w-xl text-hero">${esc(h.title)}</h1>
+      <h1 class="max-w-xl text-hero">${esc(h.title)}</h1>
       <p class="mt-7 max-w-xl text-lead text-muted">${esc(h.lead)}</p>
       <div class="mt-8">${callButtons(t)}</div>
-      <ul class="mt-8 flex flex-wrap gap-x-5 gap-y-2 border-t border-line pt-5 text-small text-muted">${h.facts.map((f) => `<li class="flex items-center gap-2"><span class="text-red">${icon('check', 'h-4 w-4')}</span>${esc(f)}</li>`).join('')}</ul>
+      <p class="mt-8 max-w-md border-l-2 border-red pl-4 text-small text-muted">${esc(h.factsLine)}</p>
     </div>
     <figure class="hero-figure">
       <div class="hero-photo">
@@ -535,14 +532,14 @@ ${layersSection(t)}
     <ol class="mt-12 border-t border-line">
       ${partsList(t)}
     </ol>
-    <p class="mt-8"><a class="link" href="cinnost.html">${esc(h.tradesMore)}${icon('arrow', 'h-4 w-4')}</a></p>
+    <p class="mt-8"><a class="link" href="cinnost.html">${esc(h.tradesMore)}</a></p>
   </div>
 </section>
 
 <section class="border-t border-line bg-paper-2 py-section">
   <div class="shell">
     ${sectionTop('03', h.whoEyebrow, h.whoTitle)}
-    <div class="mt-12 grid gap-5 md:grid-cols-3">${details}</div>
+    <div class="mt-10 border-b border-line">${details}</div>
   </div>
 </section>
 
@@ -560,21 +557,20 @@ function services(t) {
     .map(
       (g, i) => `<article id="${g.id}" class="grid gap-6 border-t border-line py-10 md:grid-cols-[17rem_1fr] md:gap-10">
       <div>
-        <p class="tag tag-red">${pad(i + 1)}</p>
-        <h2 class="mt-2 text-display-lg">${esc(g.h)}</h2>
+        <h2 class="text-display-lg">${esc(g.h)}</h2>
       </div>
       <div>
         <p class="max-w-prose text-lead text-muted">${esc(g.p)}</p>
         <ul class="mt-6 grid gap-x-10 gap-y-2 sm:grid-cols-2">${g.items.map((x) => `<li class="flex gap-3 border-b border-line py-2"><span class="mt-[0.7em] h-0.5 w-3 shrink-0 bg-red"></span><span>${esc(x)}</span></li>`).join('')}</ul>
-        <p class="mt-6"><a class="btn-line" href="${inquiryHref(g.h)}">${esc(s.inquiry)}: ${esc(g.h.charAt(0).toLowerCase() + g.h.slice(1))}${icon('arrow')}</a></p>
+        <p class="mt-6"><a class="btn-line" href="${inquiryHref(g.h)}">${esc(s.inquiry)}: ${esc(g.h.charAt(0).toLowerCase() + g.h.slice(1))}</a></p>
       </div>
     </article>`
     )
     .join('\n    ');
   const jump = s.groups
-    .map((g, i) => `<li><a class="inline-flex min-h-11 items-center gap-2 border border-line bg-sheet px-3 text-small font-semibold hover:bg-ink hover:text-white" href="#${g.id}"><span class="tag tag-red">${pad(i + 1)}</span>${esc(g.h)}</a></li>`)
+    .map((g, i) => `<li><a class="inline-flex min-h-11 items-center gap-2 border border-line bg-sheet px-3 text-small font-semibold hover:bg-ink hover:text-white" href="#${g.id}">${esc(g.h)}</a></li>`)
     .join('');
-  return `${pageHead(t, s.eyebrow, s.title, s.lead)}
+  return `${pageHead(t, s.eyebrow, s.title, s.lead, { slug: 'gallery-8', alt: 'Dodávka VODOTOP FM' })}
 <section class="py-12 sm:py-16">
   <div class="shell">
     <nav aria-label="Služby na stránce"><ul class="flex flex-wrap gap-2">${jump}</ul></nav>
@@ -593,7 +589,7 @@ ${contactBand(t)}`;
 function references(t, refs) {
   const r = t.refsPage;
   const years = [...new Set(refs.map((x) => x.year))].sort((a, b) => b.localeCompare(a));
-  const btn = 'min-h-11 border border-line bg-sheet px-4 font-mono text-small hover:bg-ink hover:text-white';
+  const btn = 'min-h-11 whitespace-nowrap rounded border border-line bg-white px-4 text-small font-semibold hover:border-ink';
   const filters = [`<button type="button" class="${btn}" data-filter="all" aria-pressed="true">${esc(t.common.allYears)}</button>`]
     .concat(years.map((y) => `<button type="button" class="${btn}" data-filter="${y}" aria-pressed="false">${y}</button>`))
     .join('');
@@ -608,7 +604,7 @@ function references(t, refs) {
     })
     .join('\n      ');
   const clients = t.home.refsClients.map((c, i) => `<li class="flex items-baseline gap-3 border-b border-line py-3"><span class="font-semibold">${esc(c)}</span></li>`).join('');
-  return `${pageHead(t, r.eyebrow, r.title, r.lead)}
+  return `${pageHead(t, r.eyebrow, r.title, r.lead, { slug: 'gallery-1', alt: 'Areál VODOTOP FM v Kunčičkách u Bašky z výšky' })}
 <section class="py-section">
   <div class="shell grid gap-12 lg:grid-cols-[.8fr_1.2fr] lg:gap-16">
     <div>
@@ -646,11 +642,11 @@ function profile(t) {
   const photos = p.photos
     .map((ph, i) => `<figure>${img(ph.slug, { cls: 'aspect-[4/3] h-auto w-full rounded-xl object-cover', alt: ph.alt, sizes: '(min-width:640px) 33vw, 100vw' })}</figure>`)
     .join('');
-  return `${pageHead(t, p.eyebrow, p.title, p.lead)}
+  return `${pageHead(t, p.eyebrow, p.title, p.lead, { slug: 'gallery-5', alt: 'Hala VODOTOP FM s modrým pruhem a logem' })}
 <section class="py-section">
   <div class="shell grid gap-12 lg:grid-cols-[1.3fr_.7fr] lg:gap-16">
     <div class="max-w-prose text-lead text-muted">${paras}
-      <p class="mt-8"><a class="link" href="znamky.html">${esc(p.marksCta)}${icon('arrow', 'h-4 w-4')}</a></p>
+      <p class="mt-8"><a class="link" href="znamky.html">${esc(p.marksCta)}</a></p>
     </div>
     <div>
       <p class="tag tag-red">${esc(p.factsTitle)}</p>
@@ -677,7 +673,7 @@ function profile(t) {
 function jobs(t) {
   const j = t.jobs;
   const list = (items) => items.map((i) => `<li class="flex gap-3 border-b border-line py-3"><span class="mt-0.5 text-red">${icon('check', 'h-4 w-4')}</span><span>${esc(i)}</span></li>`).join('');
-  return `${pageHead(t, j.eyebrow, j.title, j.lead)}
+  return `${pageHead(t, j.eyebrow, j.title, j.lead, { slug: 'gallery-7', alt: 'Vozový park VODOTOP FM před halou' })}
 <section class="py-section">
   <div class="shell grid gap-10 md:grid-cols-2">
     <div><h2 class="text-display-md">${esc(j.wantTitle)}</h2><ul class="mt-4 border-t border-line">${list(j.want)}</ul></div>
@@ -699,7 +695,7 @@ function jobs(t) {
 /* ----------------------------------------------------------------- marks */
 function marks(t) {
   const m = t.marks;
-  const trades = m.trades.map((i, n) => `<li class="flex items-baseline gap-4 border-b border-line py-3"><span class="tag tag-red">${pad(n + 1)}</span><span>${esc(i)}</span></li>`).join('');
+  const trades = m.trades.map((i, n) => `<li class="border-b border-line py-3">${esc(i)}</li>`).join('');
   const docs = m.docs.map((i) => `<li class="border-b border-line py-3">${esc(i)}</li>`).join('');
   return `${pageHead(t, m.eyebrow, m.title, m.lead)}
 <section class="py-section">
@@ -759,9 +755,8 @@ function contact(t) {
       <h2 class="mt-14 text-display-md">${esc(c.peopleTitle)}</h2>
       <ul class="mt-4 grid gap-4">${site.people.map(personCard).join('')}</ul>
     </div>
-    <form id="poptavka" data-form="poptavka" data-form-types="${esc(JSON.stringify(f.types))}" data-ph-default="${esc(f.messagePh)}" class="self-start rounded-xl border border-line bg-white p-5 shadow-lift sm:p-8" novalidate ${msgAttrs(f)}>
-      <p class="tag tag-red">Formulář</p>
-      <h2 class="mt-2 text-display-lg">${esc(c.formTitle)}</h2>
+    <form id="poptavka" data-form="poptavka" data-form-types="${esc(JSON.stringify(f.types))}" data-ph-default="${esc(f.messagePh)}" class="self-start rounded border border-line bg-white p-5 sm:p-8" novalidate ${msgAttrs(f)}>
+      <h2 class="text-display-lg">${esc(c.formTitle)}</h2>
       <p class="mt-2 text-muted">${esc(c.formLead)}</p>
       <div class="mt-7 grid gap-5 sm:grid-cols-2">
         <div class="sm:col-span-2">${field(f.service, 'sluzba', `<select id="sluzba" class="field" name="sluzba" required data-form-type><option value="">${esc(f.servicePh)}</option>${opts}</select>`)}</div>
@@ -778,7 +773,7 @@ function contact(t) {
       </label>
       <input type="hidden" name="lang" value="cs">
       <div data-turnstile class="mt-5"></div>
-      <button type="submit" class="btn-primary mt-6 w-full" data-form-submit>${esc(f.submit)}${icon('arrow')}</button>
+      <button type="submit" class="btn-primary mt-6 w-full" data-form-submit>${esc(f.submit)}</button>
       <p data-form-status role="status" aria-live="polite" tabindex="-1" class="mt-4 px-4 py-3 text-small" hidden></p>
     </form>
     <div data-form-done-dialog hidden role="dialog" aria-modal="true" aria-labelledby="form-done-title" class="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 p-4">
@@ -804,8 +799,7 @@ function legalPage(t, doc_) {
 function notFound(t) {
   return `<section class="grid-paper py-24">
   <div class="shell max-w-2xl">
-    <p class="tag tag-red">Chyba 404</p>
-    <h1 class="mt-3 text-display-xl">${esc(t.notFound.title)}</h1>
+    <h1 class="text-display-xl">${esc(t.notFound.title)}</h1>
     <p class="mt-5 text-lead text-muted">${esc(t.notFound.lead)}</p>
     <div class="mt-8 flex flex-wrap gap-3">
       <a class="btn-primary" href="/">${esc(t.notFound.home)}</a>

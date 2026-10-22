@@ -48,7 +48,7 @@ module.exports = {
   home: {
     eyebrow: 'Kunčičky u Bašky · od roku 1994',
     title: 'Voda, topení, plyn a elektro pro domy, bytovky i firmy',
-    facts: ['Od roku 1994', '30 lidí', 'Cech instalatérů č. 0410', 'Pojištění díla 20 mil. Kč'],
+    factsLine: 'Firma z Kunčiček u Bašky, od roku 1994. Třicet lidí, vlastní revizní technik a členství v Cechu instalatérů.',
     heroWords: [['Voda', 'cold'], ['Topení', 'hot'], ['Plyn', 'hot'], ['Elektro', 'cold']],
     heroSub: 'pro rodinné domy, bytovky i firmy',
     lead: 'Montujeme a opravujeme rozvody, kotle a kotelny, děláme revize plynu a elektro. Od rodinného domu po nemocnici, v okolí Frýdku-Místku.',
@@ -121,6 +121,7 @@ module.exports = {
       volume: 'Objem',
       boards: 'Desek 1000 × 500 mm',
       note: 'Orientační výpočet. Cenu a termín dodání vám pošleme na poptávku.',
+      empty: 'Zadejte plochu v m², například 120 nebo 12,5.',
       section: 'Řez',
       sections: { wall: 'fasáda', floor: 'podlaha', roof: 'strop / podkroví' },
       layersWall: ['zdivo', 'lepidlo', 'EPS', 'omítka'],
