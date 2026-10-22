@@ -139,6 +139,12 @@ final class FE_Engine
             return array('ok' => true, 'id' => $id, 'mail' => 'deferred');
         }
 
+        try {
+            $mailer->sendConfirmation($form, $values, $meta);
+        } catch (FE_Exception $e) {
+            $this->storage->log('confirmation failed for ' . $id . ': ' . $e->getMessage());
+        }
+
         return array('ok' => true, 'id' => $id, 'mail' => $transport);
     }
 

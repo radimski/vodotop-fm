@@ -2,7 +2,9 @@
   "forms": {
     "poptavka": {
       "label": "Poptávka z webu",
-      "to": ["klus@vodotop-fm.cz"],
+      "to": [
+        "klus@vodotop-fm.cz"
+      ],
       "cc": [],
       "subject": "Poptávka z webu — {sluzba}, {jmeno}",
       "replyTo": "email",
@@ -11,29 +13,89 @@
       "maxPerDay": 20,
       "store": true,
       "fields": {
-        "jmeno": { "type": "text", "label": "Jméno a příjmení", "required": true, "min": 2, "max": 100 },
-        "telefon": { "type": "tel", "label": "Telefon", "required": true, "max": 40 },
-        "email": { "type": "email", "label": "E-mail", "required": false, "max": 200 },
+        "jmeno": {
+          "type": "text",
+          "label": "Jméno a příjmení",
+          "required": true,
+          "min": 2,
+          "max": 100
+        },
+        "telefon": {
+          "type": "tel",
+          "label": "Telefon",
+          "required": true,
+          "max": 40
+        },
+        "email": {
+          "type": "email",
+          "label": "E-mail",
+          "required": false,
+          "max": 200
+        },
         "sluzba": {
           "type": "select",
-          "label": "Typ poptávky",
+          "label": "O co jde",
           "required": true,
           "options": [
-            "Vodoinstalace",
-            "Topení",
-            "Plyn / revize",
+            "Voda a kanalizace",
+            "Topení a kotle",
+            "Plyn a revize",
             "Elektro",
-            "Tepelné čerpadlo",
-            "Solární systém",
+            "Tepelné čerpadlo nebo solár",
+            "Kamera do potrubí",
             "Rekonstrukce",
-            "EPS / polystyren",
-            "Zaměstnání",
-            "Jiné"
+            "Polystyren EPS",
+            "Vrtání, lešení, doprava",
+            "Práce u nás",
+            "Něco jiného"
           ]
         },
-        "zprava": { "type": "textarea", "label": "Popis zakázky", "required": true, "min": 5, "max": 4000, "maxLinks": 1 },
-        "souhlas": { "type": "consent", "label": "Souhlas se zpracováním osobních údajů", "required": true },
-        "lang": { "type": "hidden", "label": "Jazyk", "max": 5 }
+        "obec": {
+          "type": "text",
+          "label": "Obec",
+          "required": false,
+          "max": 100
+        },
+        "kotel": {
+          "type": "text",
+          "label": "Značka a rok kotle",
+          "required": false,
+          "max": 120
+        },
+        "mnozstvi": {
+          "type": "text",
+          "label": "Množství a typ polystyrenu",
+          "required": false,
+          "max": 200
+        },
+        "zprava": {
+          "type": "textarea",
+          "label": "Co potřebujete",
+          "required": true,
+          "min": 5,
+          "max": 4000,
+          "maxLinks": 1
+        },
+        "souhlas": {
+          "type": "consent",
+          "label": "Seznámení se zásadami ochrany osobních údajů",
+          "required": true
+        },
+        "lang": {
+          "type": "hidden",
+          "label": "Jazyk",
+          "max": 5
+        }
+      },
+      "autoreply": {
+        "enabled": true,
+        "toField": "email",
+        "subject": {
+          "cs": "Přijali jsme vaši poptávku — VODOTOP FM"
+        },
+        "text": {
+          "cs": "Dobrý den,\n\nděkujeme za poptávku. Ozveme se na telefon, který jste uvedli.\n\nVODOTOP FM s.r.o.\n+420 558 440 040\nklus@vodotop-fm.cz"
+        }
       }
     }
   }

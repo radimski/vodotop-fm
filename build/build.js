@@ -40,12 +40,11 @@ function head({ title, description, canonical, noindex = false, jsonld = [] }) {
   const ogImg = `${site.origin}/img/${images.find((i) => i.slug === 'og').file}`;
   return `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
 <title>${T.esc(title)}</title>
 <meta name="description" content="${T.esc(description)}">
-<meta name="theme-color" content="#07090c">
-${noindex ? '<meta name="robots" content="noindex,follow">\n' : ''}<link rel="canonical" href="${canonical}">
-<link rel="alternate" hreflang="cs-CZ" href="${canonical}">
-<link rel="alternate" hreflang="x-default" href="${pageUrl()}">
+<meta name="theme-color" content="#f3f0e9">
+${noindex ? '<meta name="robots" content="noindex,follow">' : `<link rel="canonical" href="${canonical}">`}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${T.esc(site.brand)}">
 <meta property="og:url" content="${canonical}">
@@ -58,8 +57,8 @@ ${noindex ? '<meta name="robots" content="noindex,follow">\n' : ''}<link rel="ca
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" as="font" type="font/woff2" href="fonts/sourcesans3-400-700-latin.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="fonts/sourcesans3-400-700-latinext.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/archivo-400-800-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/archivo-400-800-latinext.woff2" crossorigin>
 <link rel="stylesheet" href="fonts.css?v=${v}">
 <link rel="stylesheet" href="styles.css?v=${v}">
 ${jsonld.map((j) => `<script type="application/ld+json">${JSON.stringify(j)}</script>`).join('\n')}`;
@@ -70,6 +69,9 @@ function businessLd() {
     '@context': 'https://schema.org',
     '@type': 'HVACBusiness',
     name: site.brandFull,
+    legalName: site.legal.operator,
+    vatID: site.legal.dic,
+    logo: `${site.origin}/img/logo.png`,
     url: site.origin + '/',
     email: site.email,
     telephone: site.phone,
@@ -87,6 +89,11 @@ function businessLd() {
       { '@type': 'AdministrativeArea', name: 'Frýdek-Místek' },
     ],
   };
+  if (site.hours) {
+    ld.openingHoursSpecification = [
+      { '@type': 'OpeningHoursSpecification', dayOfWeek: site.hours.days, opens: site.hours.opens, closes: site.hours.closes },
+    ];
+  }
   if (site.geo) ld.geo = { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lon };
   return ld;
 }
@@ -97,7 +104,7 @@ function doc(headHtml, bodyHtml, withForm = false) {
 <head>
 ${headHtml}
 </head>
-<body data-ga="${site.gaId}" data-form-endpoint="${site.formEndpoint}" data-lang="cs" data-turnstile-site-key="">
+<body data-ga="${site.gaId}" data-form-endpoint="${site.formEndpoint}" data-lang="cs" data-copied="${T.esc(t.common.copied)}" data-turnstile-site-key="">
 ${bodyHtml}
 <script src="main.js?v=${v}" defer></script>${withForm ? `\n<script src="form.js?v=${v}" defer></script>` : ''}
 </body>
@@ -128,17 +135,16 @@ ${T.footer(t)}`;
 }
 
 page('index.html', t.meta.title, t.meta.description, T.home(t));
-page('profil.html', `Profil firmy | ${site.brand}`, t.profile.lead, T.profile(t));
-page('cinnost.html', `Činnost firmy | ${site.brand}`, t.services.lead, T.services(t));
-page('reference.html', `Reference | ${site.brand}`, t.refsPage.lead, T.references(t, refs));
-page('fotogalerie.html', `Fotogalerie | ${site.brand}`, t.gallery.lead, T.gallery(t));
-page('zamestnani.html', `Zaměstnání | ${site.brand}`, t.jobs.lead, T.jobs(t));
-page('znamky.html', `Oprávnění | ${site.brand}`, t.marks.lead, T.marks(t));
-page('kontakty.html', `Kontakty | ${site.brand}`, t.contact.lead, T.contact(t), true);
+page('profil.html', `O firmě – od roku 1994 v Kunčičkách u Bašky | ${site.brand}`, t.profile.lead, T.profile(t));
+page('cinnost.html', `Služby – voda, topení, plyn, elektro | ${site.brand}`, t.services.lead, T.services(t));
+page('reference.html', `Reference – zakázky 2004–2014 | ${site.brand}`, t.refsPage.lead, T.references(t, refs));
+page('zamestnani.html', `Práce u nás – instalatér, topenář, plynař | ${site.brand}`, t.jobs.lead, T.jobs(t));
+page('znamky.html', `Oprávnění a dokumenty | ${site.brand}`, t.marks.lead, T.marks(t));
+page('kontakty.html', `Kontakt a poptávka | ${site.brand}`, t.contact.lead, T.contact(t), true);
 page('provozovatel.html', `${legal.operator.title} | ${site.brand}`, legal.operator.description, T.legalPage(t, legal.operator));
-page('ochrana-osobnich-udaju.html', `${legal.privacy.title} | ${site.brand}`, legal.privacy.description, T.legalPage(t, legal.privacy));
-page('cookies.html', `${legal.cookies.title} | ${site.brand}`, legal.cookies.description, T.legalPage(t, legal.cookies));
-page('404.html', t.notFound.title, t.notFound.lead, T.notFound(t));
+page('404.html', `${t.notFound.title} | ${site.brand}`, t.notFound.lead, T.notFound(t));
+// The gallery page was folded into profil.html#areal; headers.js 301s the old URL.
+fs.rmSync(path.join(SITE, 'fotogalerie.html'), { force: true });
 
 fs.copyFileSync(path.join(__dirname, 'main.js'), path.join(SITE, 'main.js'));
 fs.copyFileSync(path.join(__dirname, 'form.js'), path.join(SITE, 'form.js'));
@@ -149,13 +155,10 @@ const pages = [
   'profil.html',
   'cinnost.html',
   'reference.html',
-  'fotogalerie.html',
   'zamestnani.html',
   'znamky.html',
   'kontakty.html',
   'provozovatel.html',
-  'ochrana-osobnich-udaju.html',
-  'cookies.html',
 ];
 write(
   'sitemap.xml',
@@ -165,7 +168,19 @@ ${pages.map((p) => `  <url><loc>${p ? `${site.origin}/${p}` : `${site.origin}/`}
 </urlset>
 `
 );
-write('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${site.origin}/sitemap.xml\n`);
+// Old URLs from the 2000s site and the first demo. Cloudflare reads _redirects;
+// Apache gets the same rules from headers.js (.htaccess).
+const oldYears = Array.from({ length: 11 }, (_, i) => 2004 + i);
+write(
+  '_redirects',
+  [
+    ...oldYears.map((y) => `/reference${y}.html /reference.html?rok=${y} 301`),
+    '/fotogalerie.html /profil.html#areal 301',
+    '/cookies.html /#cookies 301',
+    '/ochrana-osobnich-udaju.html /#ochrana-osobnich-udaju 301',
+  ].join('\n') + '\n'
+);
+write('robots.txt',`User-agent: *\nAllow: /\nSitemap: ${site.origin}/sitemap.xml\n`);
 
 fs.writeFileSync(path.join(SITE, '.htaccess'), headers.htaccess());
 fs.writeFileSync(path.join(SITE, 'web.config'), headers.webConfig());

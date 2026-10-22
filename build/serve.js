@@ -28,6 +28,26 @@ const TYPES = {
 http
   .createServer((req, res) => {
     let rel = decodeURIComponent(req.url.split('?')[0]);
+    if (rel === '/index.html') {
+      res.writeHead(301, { Location: '/' });
+      res.end();
+      return;
+    }
+    if (rel === '/ochrana-osobnich-udaju.html') {
+      res.writeHead(301, { Location: '/#ochrana-osobnich-udaju' });
+      res.end();
+      return;
+    }
+    if (rel === '/cookies.html') {
+      res.writeHead(301, { Location: '/#cookies' });
+      res.end();
+      return;
+    }
+    if (rel === '/fotogalerie.html') {
+      res.writeHead(301, { Location: '/profil.html#areal' });
+      res.end();
+      return;
+    }
     if (rel.endsWith('/')) rel += 'index.html';
     const abs = path.join(ROOT, rel);
 

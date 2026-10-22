@@ -14,7 +14,8 @@ const CSS_OUT = path.join(SITE, 'fonts.css');
 // weight in between is available for free.
 const CSS_URL =
   'https://fonts.googleapis.com/css2' +
-  '?family=Source+Sans+3:wght@400..700' +
+  '?family=Archivo:wdth,wght@62..125,400..800' +
+  '&family=IBM+Plex+Mono:wght@500' +
   '&display=swap';
 
 // Chrome UA is what makes Google serve woff2 instead of ttf
@@ -44,6 +45,7 @@ const KEEP_SUBSETS = ['latin', 'latin-ext'];
     // may be a single weight ("600") or a variable range ("400 700")
     const weight = (block.match(/font-weight:\s*([\d\s]+?);/) || [])[1];
     const url = (block.match(/url\((https:\/\/[^)]+\.woff2)\)/) || [])[1];
+    const stretch = (block.match(/font-stretch:s*([^;]+);/) || [])[1];
     const unicode = (block.match(/unicode-range:\s*([^;]+);/) || [])[1];
     if (!fam || !weight || !url) continue;
 
@@ -55,7 +57,7 @@ const KEEP_SUBSETS = ['latin', 'latin-ext'];
     bytes += buf.length;
 
     out +=
-      `@font-face{font-family:'${fam}';font-style:normal;font-weight:${weight};` +
+      `@font-face{font-family:'${fam}';font-style:normal;font-weight:${weight};${stretch ? `font-stretch:${stretch};` : ''}` +
       `font-display:swap;src:url(fonts/${fname}) format('woff2');unicode-range:${unicode};}\n`;
     console.log(`  ${fname.padEnd(34)} ${(buf.length / 1024).toFixed(0)} KB`);
   }

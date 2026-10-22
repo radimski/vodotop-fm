@@ -1,10 +1,13 @@
 /* Language-independent facts about the business + build switches. */
 module.exports = {
   origin: 'https://www.vodotop-fm.cz',
-  assetVersion: 17,
+  assetVersion: 25,
 
+  // Production floor is 2592000 (30 days). 300s only proved the header arrives
+  // on a live host; this site is not live yet, so it starts at the floor.
+  // Climb later: 2592000 → 31536000, then includeSubDomains, then preload.
   hsts: {
-    maxAge: 300,
+    maxAge: 2592000,
     includeSubDomains: false,
     preload: false,
   },
@@ -24,6 +27,8 @@ module.exports = {
   mapUrl: 'https://mapy.cz/zakladni?x=18.358144&y=49.653901&z=17',
   geo: { lat: 49.653901, lon: 18.358144 },
   dataBox: 'ikza5tr',
+  // TODO(klient): hodiny jsou z firemních katalogů, na starém webu nebyly. Potvrdit.
+  hours: { label: 'Po–Pá 7:00–15:00', days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '07:00', closes: '15:00' },
 
   social: {},
 
@@ -31,7 +36,7 @@ module.exports = {
     operator: 'VODOTOP FM s.r.o.',
     ico: '26823519',
     dic: 'CZ26823519',
-    seat: 'Baška 355, Kunčičky u Bašky, 739 01 Baška',
+    seat: 'Kunčičky u Bašky 355, 739 01 Baška',
     registryNo: 'C 26765',
     registryOffice: 'Krajský soud v Ostravě',
     capital: '1 900 000 Kč',

@@ -109,6 +109,9 @@ const HSTS = (() => {
   };
 
   if (!Number.isInteger(maxAge) || maxAge < 0) fail('maxAge must be a whole number of seconds');
+  if (maxAge > 0 && maxAge < 2592000) {
+    fail('production floor is 2592000 (30 days); 300s is not a live value');
+  }
   if (cfg.preload && !cfg.includeSubDomains) fail('preload requires includeSubDomains');
   if (cfg.preload && maxAge < 31536000) fail('preload requires maxAge of at least 31536000 (one year)');
 
@@ -118,6 +121,22 @@ const HSTS = (() => {
     ...(cfg.preload ? ['preload'] : []),
   ].join('; ');
 })();
+
+function originHost() {
+  let url;
+  try {
+    url = new URL(site.origin);
+  } catch (e) {
+    console.error('\n  headers.js: site.origin is not a URL.\n');
+    process.exit(1);
+  }
+  const host = url.host;
+  return {
+    host,
+    origin: `${url.protocol}//${host}`,
+    escaped: host.replace(/\./g, '\\.'),
+  };
+}
 
 /* ------------------------------------------------------------------ apache */
 
@@ -153,12 +172,18 @@ ${lines}
     Header always unset X-Powered-By
 </IfModule>
 
-# HSTS only means something if visitors reach HTTPS in the first place. Both
-# conditions are needed: %{HTTPS} is off when TLS is terminated by a proxy in
-# front of Apache, and without the second test that arrangement redirects to
-# itself forever.
+# Host first: apex (or any other name) 301s to site.origin in one hop.
+# Then HTTP→HTTPS on whatever host remains. Both HTTPS tests are required:
+# Forpsi terminates TLS at a proxy, so %{HTTPS} is off and X-Forwarded-Proto
+# is the real signal.
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteCond %{HTTP_HOST} !^${originHost().escaped}$ [NC]
+    RewriteCond %{HTTP_HOST} !^localhost(:[0-9]+)?$ [NC]
+    RewriteCond %{HTTP_HOST} !^127\\.0\\.0\\.1(:[0-9]+)?$
+    RewriteCond %{HTTP_HOST} !\\.pages\\.dev$ [NC]
+    RewriteRule ^ ${originHost().origin}%{REQUEST_URI} [R=301,L]
+
     RewriteCond %{HTTPS} !=on
     RewriteCond %{HTTP:X-Forwarded-Proto} !https
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
@@ -204,12 +229,35 @@ ${lines}
 
     # Old yearly reference URLs from the 2000s site.
     RewriteRule "^reference(20[0-9]{2})\\.html$" /reference.html?rok=$1 [R=301,L]
+
+    # Home file on disk is index.html; the public URL is /.
+    RewriteCond %{THE_REQUEST} \\s/+index\\.html[\\s?] [NC]
+    RewriteRule ^index\\.html$ / [R=301,NE,L]
+
+    # Privacy and cookies used to be standalone pages. Hash modals now.
+    RewriteRule "^ochrana-osobnich-udaju\\.html$" /#ochrana-osobnich-udaju [R=301,NE,L]
+    RewriteRule "^cookies\\.html$" /#cookies [R=301,NE,L]
+
+    # The gallery page became the "Areál" section of O firmě.
+    RewriteRule "^fotogalerie\\.html$" /profil.html#areal [R=301,NE,L]
 </IfModule>
 
 ErrorDocument 404 /404.html
 
 # Directory listings, in case the host ships with them on.
 Options -Indexes
+
+# HTML must not be remembered across a rebuild. Fonts, images, JS and CSS
+# carry ?v=assetVersion (or unique names), so a year is safe. Header set,
+# not always: a 404 must not be cached for a year.
+<IfModule mod_headers.c>
+    <FilesMatch "\\.html$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+    <FilesMatch "\\.(js|css|png|jpe?g|webp|svg|woff2|ico)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
 `;
 
   /* These patterns live inside a template literal, where JavaScript silently
@@ -266,7 +314,7 @@ ${adds}
 
     <httpErrors errorMode="Custom" existingResponse="Replace">
       <remove statusCode="404" />
-      <error statusCode="404" path="/404.html" responseMode="ExecuteURL" />
+      <error statusCode="404" path="404.html" responseMode="File" />
     </httpErrors>
 
     <security>
@@ -316,6 +364,30 @@ function cfHeaders(styleHash) {
 /*
 ${lines}
   Strict-Transport-Security: ${HSTS}
+  Cache-Control: no-cache
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/img/*
+  Cache-Control: public, max-age=31536000, immutable
+/*.js
+  Cache-Control: public, max-age=31536000, immutable
+/*.css
+  Cache-Control: public, max-age=31536000, immutable
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+/*.png
+  Cache-Control: public, max-age=31536000, immutable
+/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+/*.jpeg
+  Cache-Control: public, max-age=31536000, immutable
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+/*.svg
+  Cache-Control: public, max-age=31536000, immutable
+/*.ico
+  Cache-Control: public, max-age=31536000, immutable
 `;
 }
 

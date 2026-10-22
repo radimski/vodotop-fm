@@ -46,7 +46,8 @@
     var target = null;
     if (location.hash) {
       try { target = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (e) {}
-      if (!target) return; // unknown fragment: leave the browser to it
+      if (target && target.hasAttribute('data-legal-dialog')) return;
+      if (!target) return;
     }
 
     var saved = null;
@@ -116,6 +117,7 @@
       if (!id) return;
       var target = document.getElementById(id);
       if (!target) return;
+      if (target.hasAttribute('data-legal-dialog')) return;
 
       e.preventDefault();
 
@@ -342,6 +344,146 @@
       if (e.key === 'Escape') close();
       if (e.key === 'ArrowLeft') show(idx - 1);
       if (e.key === 'ArrowRight') show(idx + 1);
+    });
+  })();
+
+  /* ----------------------------------------------------- legal dialogs */
+  (function legalDialogs() {
+    var dialogs = $$('[data-legal-dialog]');
+    if (!dialogs.length) return;
+
+    var lastFocus = null;
+    var openId = null;
+
+    function current() {
+      var id = location.hash ? location.hash.slice(1) : '';
+      if (!id) return null;
+      try { return document.getElementById(decodeURIComponent(id)); } catch (e) { return null; }
+    }
+
+    function focusable(root) {
+      return $$('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])', root)
+        .filter(function (el) { return !el.hasAttribute('aria-hidden') && el.tabIndex !== -1; });
+    }
+
+    function closeHash() {
+      if (history.replaceState) {
+        history.replaceState(null, '', location.pathname + location.search);
+      } else {
+        location.hash = '';
+      }
+      sync();
+    }
+
+    function sync() {
+      var el = current();
+      var next = el && el.hasAttribute('data-legal-dialog') ? el : null;
+      if (next) {
+        if (openId !== next.id) lastFocus = document.activeElement;
+        openId = next.id;
+        body.style.overflow = 'hidden';
+        var panel = next.querySelector('.legal-dialog-panel');
+        var closeBtn = next.querySelector('[data-legal-close]:not(.legal-dialog-backdrop)');
+        if (closeBtn) closeBtn.focus();
+        else if (panel) panel.focus();
+      } else {
+        if (openId) {
+          body.style.overflow = '';
+          if (lastFocus && lastFocus.focus) lastFocus.focus();
+        }
+        openId = null;
+      }
+    }
+
+    window.addEventListener('hashchange', sync);
+    if (location.hash) sync();
+
+    document.addEventListener('click', function (e) {
+      if (!openId) return;
+      var close = e.target.closest && e.target.closest('[data-legal-close]');
+      if (!close) return;
+      e.preventDefault();
+      closeHash();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (!openId) return;
+      var el = document.getElementById(openId);
+      if (!el) return;
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeHash();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+
+      var items = focusable(el).filter(function (node) {
+        return !node.classList.contains('legal-dialog-backdrop');
+      });
+      if (!items.length) {
+        e.preventDefault();
+        return;
+      }
+      var first = items[0];
+      var last = items[items.length - 1];
+      // Focus can sit on the panel itself or have left the dialog: pull it back in.
+      if (items.indexOf(document.activeElement) === -1) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+        return;
+      }
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+  })();
+
+  /* ------------------------------------------- desktop mailto copy */
+  (function mailtoCopy() {
+    var desktop = window.matchMedia('(hover: hover) and (pointer: fine)');
+    var label = body.getAttribute('data-copied') || 'Zkopírováno';
+    var toast = null;
+    var hideTimer = null;
+
+    function isDesktop() {
+      return desktop.matches && window.innerWidth >= 768;
+    }
+
+    function show(x, y) {
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.setAttribute('data-copied-toast', '');
+        toast.setAttribute('role', 'status');
+        toast.textContent = label;
+        body.appendChild(toast);
+      }
+      toast.textContent = label;
+      toast.hidden = false;
+      toast.style.left = Math.min(x + 12, window.innerWidth - 8) + 'px';
+      toast.style.top = Math.min(y + 12, window.innerHeight - 8) + 'px';
+      if (hideTimer) clearTimeout(hideTimer);
+      hideTimer = setTimeout(function () {
+        toast.hidden = true;
+      }, 1600);
+    }
+
+    document.addEventListener('click', function (e) {
+      if (e.defaultPrevented || e.button !== 0) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      if (!isDesktop()) return;
+      var a = e.target.closest && e.target.closest('a[href^="mailto:"]');
+      if (!a) return;
+      var addr = (a.getAttribute('href') || '').replace(/^mailto:/i, '').split('?')[0];
+      if (!addr) return;
+      var copy = navigator.clipboard && navigator.clipboard.writeText
+        ? navigator.clipboard.writeText(addr)
+        : Promise.reject();
+      copy.then(function () { show(e.clientX, e.clientY); }).catch(function () {});
     });
   })();
 
@@ -624,5 +766,216 @@
     var params = new URLSearchParams(location.search);
     var rok = params.get('rok');
     if (rok && $('[data-filter="' + rok + '"]', root)) apply(rok);
+  })();
+
+  /* --------------------------------------- scroll progress (twin pipe) */
+  /* CSSOM transform, not a style attribute, so the CSP stays without
+   * 'unsafe-inline'. */
+  (function scrollPipe() {
+    var bar = $('[data-scroll-pipe]');
+    if (!bar) return;
+    var queued = false;
+    function draw() {
+      queued = false;
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.transform = 'scaleX(' + (max > 0 ? Math.max(0, Math.min(window.scrollY / max, 1)) : 0) + ')';
+    }
+    window.addEventListener('scroll', function () {
+      if (!queued) { queued = true; requestAnimationFrame(draw); }
+    }, { passive: true });
+    window.addEventListener('resize', draw);
+    draw();
+  })();
+
+  /* ------------------------------------------- house schema: layers */
+  (function houseLayers() {
+    var all = $('[data-layer-all]');
+    var btns = $$('[data-layer-btn]');
+    if (!btns.length) return;
+    function set(id, on) {
+      $$('[data-layer="' + id + '"]').forEach(function (g) { g.classList.toggle('is-off', !on); });
+      $$('[data-layer-row="' + id + '"]').forEach(function (r) { r.classList.toggle('is-off', !on); });
+      $$('[data-layer-btn="' + id + '"]').forEach(function (b) { b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    }
+    function sync() {
+      var every = btns.every(function (b) { return b.getAttribute('aria-pressed') === 'true'; });
+      if (all) all.setAttribute('aria-pressed', every ? 'true' : 'false');
+    }
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var id = b.getAttribute('data-layer-btn');
+        var every = btns.every(function (x) { return x.getAttribute('aria-pressed') === 'true'; });
+        // From "everything on", the first click isolates that trade; after that buttons toggle.
+        if (every) {
+          btns.forEach(function (x) { set(x.getAttribute('data-layer-btn'), x === b); });
+        } else {
+          set(id, b.getAttribute('aria-pressed') !== 'true');
+          if (btns.every(function (x) { return x.getAttribute('aria-pressed') !== 'true'; })) set(id, true);
+        }
+        sync();
+      });
+    });
+    if (all) {
+      all.addEventListener('click', function () {
+        btns.forEach(function (x) { set(x.getAttribute('data-layer-btn'), true); });
+        sync();
+      });
+    }
+  })();
+
+  /* ---------------------------------------- reference map <-> list sync */
+  (function refMap() {
+    var pts = $$('[data-place]');
+    if (!pts.length) return;
+    function activate(i, on) {
+      $$('[data-place="' + i + '"], [data-place-row="' + i + '"]').forEach(function (el) {
+        el.classList.toggle('is-active', on);
+      });
+    }
+    pts.forEach(function (pt) {
+      var i = pt.getAttribute('data-place');
+      ['mouseenter', 'focus'].forEach(function (ev) { pt.addEventListener(ev, function () { activate(i, true); }); });
+      ['mouseleave', 'blur'].forEach(function (ev) { pt.addEventListener(ev, function () { activate(i, false); }); });
+      pt.addEventListener('click', function () {
+        var row = $('[data-place-row="' + i + '"]');
+        if (row && window.matchMedia('(min-width: 1024px)').matches === false) row.scrollIntoView({ block: 'nearest' });
+      });
+    });
+    $$('[data-place-row]').forEach(function (row) {
+      var i = row.getAttribute('data-place-row');
+      row.addEventListener('mouseenter', function () { activate(i, true); });
+      row.addEventListener('mouseleave', function () { activate(i, false); });
+    });
+  })();
+
+  /* --------------------------------------------- parts list (accordion) */
+  (function parts() {
+    $$('[data-part-btn]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var part = btn.closest('[data-part]');
+        if (!part) return;
+        var open = btn.getAttribute('aria-expanded') !== 'true';
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        part.classList.toggle('is-open', open);
+      });
+    });
+  })();
+
+  /* ------------------------------------------------- EPS calculator */
+  /* Objem = plocha × tloušťka; desky 1000 × 500 mm = 0,5 m² každá.
+   * The result goes to the inquiry form as ?typ=…&mnozstvi=… — no personal
+   * data in the URL, only the quantity the visitor just typed. */
+  (function calculator() {
+    var root = $('[data-calc]');
+    if (!root) return;
+    var area = $('[data-calc-area]', root);
+    var thick = $('[data-calc-thick]', root);
+    var reserve = $('[data-calc-reserve]', root);
+    var outVol = $('[data-calc-volume]', root);
+    var outBoards = $('[data-calc-boards]', root);
+    var note = $('[data-calc-type-note]', root);
+    var cta = $('[data-calc-cta]', root);
+    var chips = $$('[data-calc-type]', root);
+    var type = chips.length ? chips[0].getAttribute('data-calc-type') : '';
+    var fmt = function (n, d) {
+      return n.toLocaleString('cs-CZ', { minimumFractionDigits: d, maximumFractionDigits: d });
+    };
+
+    /* Section cut next to the calculator: a wall for façade boards, a floor
+     * for the rest. Geometry goes through SVG attributes, never style="". */
+    var cutWall = $('[data-cut="wall"]');
+    var cutFloor = $('[data-cut="floor"]');
+    var cutName = $('[data-calc-section-name]');
+    function attr(sel, name, val) { $$(sel).forEach(function (el) { el.setAttribute(name, val); }); }
+    function drawCut(mm) {
+      if (!cutWall || !cutFloor) return;
+      var px = Math.round(10 + mm * 0.28);
+      var label = mm + ' mm';
+      var wall = /F$/.test(type);
+      cutWall.setAttribute('display', wall ? 'inline' : 'none');
+      cutFloor.setAttribute('display', wall ? 'none' : 'inline');
+      if (cutName) {
+        var names = root.getAttribute('data-cut-names');
+        try { names = JSON.parse(names); } catch (e) { names = null; }
+        if (names) cutName.textContent = wall ? names.wall : /^EPS 50/.test(type) ? names.roof : names.floor;
+      }
+      attr('[data-cut-eps-w]', 'width', px);
+      attr('[data-cut-render]', 'x', 114 + px);
+      attr('[data-cut-dim-w]', 'd', 'M114 12h' + px + 'M114 7v10M' + (114 + px) + ' 7v10');
+      attr('[data-cut-label-w]', 'x', 114 + px / 2);
+      attr('[data-cut-eps-h]', 'height', px);
+      attr('[data-cut-slab]', 'y', 42 + px);
+      attr('[data-cut-slab-label]', 'y', 42 + px + 24);
+      attr('[data-cut-dim-h]', 'd', 'M262 42v' + px + 'M257 42h10M257 ' + (42 + px) + 'h10');
+      attr('[data-cut-label-h]', 'y', 42 + px / 2 + 4);
+      $$('[data-cut-label-w], [data-cut-label-h]').forEach(function (el) { el.textContent = label; });
+      $$('[data-cut-eps-name-w], [data-cut-eps-name-h]').forEach(function (el) { el.textContent = type; });
+      var epsNameW = $('[data-cut-eps-name-w]');
+      if (epsNameW) epsNameW.setAttribute('x', 114 + px / 2);
+    }
+
+    function update() {
+      var a = parseFloat(String(area.value).replace(',', '.'));
+      if (!isFinite(a) || a < 0) a = 0;
+      var t = parseFloat(thick.value) || 0;
+      var k = reserve.checked ? 1.05 : 1;
+      var m2 = a * k;
+      var vol = m2 * t / 1000;
+      var boards = Math.ceil(m2 / 0.5);
+      outVol.textContent = fmt(vol, vol < 10 ? 2 : 1);
+      outBoards.textContent = fmt(boards, 0);
+      drawCut(t);
+      var qty = fmt(a, 0) + ' m², ' + t + ' mm, ' + type + ' (cca ' + fmt(vol, 1) + ' m³, ' + boards + ' desek)';
+      cta.href = 'kontakty.html?typ=' + encodeURIComponent('Polystyren EPS') + '&mnozstvi=' + encodeURIComponent(qty) + '#poptavka';
+    }
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        type = chip.getAttribute('data-calc-type');
+        chips.forEach(function (c) { c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'); });
+        if (note) note.textContent = chip.getAttribute('title') || '';
+        update();
+      });
+    });
+    [area, thick, reserve].forEach(function (el) {
+      el.addEventListener('input', update);
+      el.addEventListener('change', update);
+    });
+    update();
+  })();
+
+  /* ---------------------------------------- inquiry form by type of job */
+  (function formByType() {
+    var form = $('[data-form-types]');
+    if (!form) return;
+    var types = {};
+    try { types = JSON.parse(form.getAttribute('data-form-types')) || {}; } catch (e) {}
+    var select = $('[data-form-type]', form);
+    var message = $('[data-form-message]', form);
+    var fallback = form.getAttribute('data-ph-default') || '';
+    var extras = $$('[data-extra]', form);
+
+    function apply() {
+      var cfg = types[select.value] || {};
+      message.placeholder = cfg.ph || fallback;
+      extras.forEach(function (box) {
+        var on = box.getAttribute('data-extra') === cfg.extra;
+        box.hidden = !on;
+        // Hidden extras are disabled so they never reach the server.
+        $$('input, select, textarea', box).forEach(function (el) { el.disabled = !on; });
+      });
+    }
+    select.addEventListener('change', apply);
+
+    var params = new URLSearchParams(location.search);
+    var typ = params.get('typ');
+    if (typ) {
+      for (var i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === typ) { select.value = typ; break; }
+      }
+    }
+    apply();
+    var qty = params.get('mnozstvi');
+    var qtyField = form.querySelector('[name="mnozstvi"]');
+    if (qty && qtyField && !qtyField.disabled) qtyField.value = qty.slice(0, 200);
   })();
 })();

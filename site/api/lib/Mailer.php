@@ -61,7 +61,6 @@ final class FE_Mailer
             'Message-ID'   => '<' . $meta['id'] . '@' . $this->domainOf($from) . '>',
             'MIME-Version' => '1.0',
             'Content-Type' => 'multipart/alternative; boundary="' . $boundary . '"',
-            'X-Mailer'     => 'form-engine',
             'Auto-Submitted' => 'auto-generated',
         );
         if ($cc) {
@@ -100,6 +99,89 @@ final class FE_Mailer
         }
 
         $this->viaMailFunction($to, $subject, $headers, $body);
+        return 'mail';
+    }
+
+    /**
+     * Confirmation to the visitor. Skipped when autoreply is off or the
+     * toField is empty (e-mail is optional on this form).
+     */
+    public function sendConfirmation(array $form, array $values, array $meta)
+    {
+        $ar = isset($form['autoreply']) ? $form['autoreply'] : null;
+        if (!$ar || empty($ar['enabled'])) {
+            return 'skipped';
+        }
+
+        $transport = $this->config->path('mail.transport', 'auto');
+        if (!$this->config->path('mail.enabled', true) || $transport === 'none') {
+            return 'skipped';
+        }
+
+        $field = isset($ar['toField']) ? $ar['toField'] : 'email';
+        $toAddr = isset($values[$field]) ? trim((string) $values[$field]) : '';
+        if (!filter_var($toAddr, FILTER_VALIDATE_EMAIL)) {
+            return 'skipped';
+        }
+
+        $from = trim((string) $this->config->path('mail.from', ''));
+        if ($from === '' || !filter_var($from, FILTER_VALIDATE_EMAIL)) {
+            throw new FE_Exception('server', 'mail.from is missing or not a valid address.');
+        }
+        $fromName = $this->headerSafe($this->config->path('mail.fromName', ''));
+
+        $lang = !empty($meta['lang']) ? $meta['lang'] : 'cs';
+        $subject = $this->headerSafe($this->fillTemplate($this->pickLang($ar['subject'], $lang), $values));
+        $text = $this->fillTemplate($this->pickLang($ar['text'], $lang), $values);
+        $office = $this->addresses($form['to']);
+        $replyTo = $office ? $office[0] : $from;
+
+        $boundary = 'fe-c-' . bin2hex(random_bytes(12));
+        $headers = array(
+            'From'           => ($fromName !== '' ? $this->encodeWord($fromName) . ' ' : '') . '<' . $from . '>',
+            'To'             => $toAddr,
+            'Date'           => date('r'),
+            'Message-ID'     => '<' . $meta['id'] . '-c@' . $this->domainOf($from) . '>',
+            'MIME-Version'   => '1.0',
+            'Content-Type'   => 'multipart/alternative; boundary="' . $boundary . '"',
+            'X-Mailer'       => 'form-engine',
+            'Auto-Submitted' => 'auto-replied',
+            'Reply-To'       => $replyTo,
+        );
+
+        $html = '<!doctype html><html><body style="margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111827">'
+            . '<div style="max-width:640px;margin:0 auto;padding:24px;white-space:pre-wrap">'
+            . nl2br(htmlspecialchars($text, ENT_QUOTES, 'UTF-8'))
+            . '</div></body></html>';
+
+        $body = "This is a message in MIME format.\r\n\r\n"
+              . '--' . $boundary . "\r\n"
+              . "Content-Type: text/plain; charset=UTF-8\r\n"
+              . "Content-Transfer-Encoding: base64\r\n\r\n"
+              . chunk_split(base64_encode($text), 76, "\r\n")
+              . '--' . $boundary . "\r\n"
+              . "Content-Type: text/html; charset=UTF-8\r\n"
+              . "Content-Transfer-Encoding: base64\r\n\r\n"
+              . chunk_split(base64_encode($html), 76, "\r\n")
+              . '--' . $boundary . "--\r\n";
+
+        $smtpHost = (string) $this->config->path('mail.smtp.host', '');
+        $useSmtp = $transport === 'smtp' || ($transport === 'auto' && $smtpHost !== '');
+
+        if ($useSmtp) {
+            try {
+                $this->viaSmtp($from, array($toAddr), $headers, $body, $subject);
+                return 'smtp';
+            } catch (FE_Exception $e) {
+                $this->storage->log('confirmation SMTP failed: ' . $e->getMessage());
+                if ($transport === 'smtp') {
+                    throw $e;
+                }
+                $this->storage->log('confirmation falling back to mail()');
+            }
+        }
+
+        $this->viaMailFunction(array($toAddr), $subject, $headers, $body);
         return 'mail';
     }
 
@@ -165,7 +247,7 @@ final class FE_Mailer
 
         $out[] = '';
         $out[] = str_repeat('-', 40);
-        $out[] = 'Odoslané: ' . $meta['at'];
+        $out[] = 'Odesláno: ' . $meta['at'];
         if (!empty($meta['page'])) {
             $out[] = 'Stránka: ' . $meta['page'];
         }
@@ -221,7 +303,7 @@ final class FE_Mailer
 
             $value = $values[$name];
             if (is_bool($value)) {
-                $value = $value ? 'áno' : 'nie';
+                $value = $value ? 'ano' : 'ne';
             }
             if ($value === '' || $value === null) {
                 continue;
@@ -246,10 +328,25 @@ final class FE_Mailer
         return preg_replace_callback('/\{([A-Za-z0-9_]+)\}/', function ($m) use ($values) {
             $v = isset($values[$m[1]]) ? $values[$m[1]] : '';
             if (is_bool($v)) {
-                $v = $v ? 'áno' : 'nie';
+                $v = $v ? 'ano' : 'ne';
             }
             return (string) $v;
         }, (string) $template);
+    }
+
+    private function pickLang($value, $lang)
+    {
+        if (is_array($value)) {
+            if (isset($value[$lang]) && $value[$lang] !== '') {
+                return (string) $value[$lang];
+            }
+            if (isset($value['cs'])) {
+                return (string) $value['cs'];
+            }
+            $first = reset($value);
+            return $first === false ? '' : (string) $first;
+        }
+        return (string) $value;
     }
 
     private function replyTo(array $form, array $values)
