@@ -327,26 +327,26 @@ function layersSection(t) {
     <rect x="80" y="440" width="520" height="72"/><path class="lay-ground" d="M0 440h680"/>
     ${[0, 12, 24, 36, 48, 60, 616, 628, 640, 652, 664].map((x) => `<path d="M${x} 452l10-10"/>`).join('')}
     <rect x="390" y="196" width="60" height="44"/><rect x="520" y="196" width="50" height="44"/><rect x="390" y="330" width="60" height="44"/><rect x="230" y="330" width="44" height="44"/>
-    ${room(92, 192, r2l)}${room(352, 266, r2r)}${room(92, 326, r1l)}${room(352, 400, r1r)}${room(92, 502, r0)}
+    ${room(182, 252, r2l)}${room(352, 266, r2r)}${room(182, 392, r1l)}${room(352, 400, r1r)}${room(180, 500, r0)}
   </g>
   <g class="lay lay-voda" data-layer="voda">
     <path class="flow" pathLength="1" d="M0 486h112M128 486h42V200"/><circle cx="120" cy="486" r="8"/><text x="104" y="474" class="lay-tag">VDM</text>
     <path class="flow" pathLength="1" d="M170 418h80M170 283h60"/>
     <rect x="250" y="404" width="34" height="14"/><rect x="230" y="276" width="78" height="24" rx="10"/>
-    <path class="lay-dash" d="M292 300V500H8"/>
+    <path class="lay-dash" d="M292 300V507H8"/>
   </g>
   <g class="lay lay-topeni" data-layer="topeni">
-    <rect x="420" y="452" width="40" height="50"/><text x="424" y="447" class="lay-tag">KOTEL</text>
-    <path class="flow" pathLength="1" d="M460 470h22V292M482 428H108M482 428h106M482 292H108M482 292h106"/>
+    <rect x="410" y="452" width="58" height="50"/><text x="439" y="481" text-anchor="middle" class="lay-tag">KOTEL</text>
+    <path class="flow" pathLength="1" d="M468 470h14V292M482 428H108M482 428h106M482 292H108M482 292h106"/>
     ${rad(110, 398)}${rad(540, 398)}${rad(110, 262)}${rad(540, 262)}
   </g>
   <g class="lay lay-plyn" data-layer="plyn">
     <rect x="18" y="378" width="36" height="24"/><text x="21" y="395" class="lay-tag">HUP</text>
-    <path class="flow" pathLength="1" d="M54 390h12v74h354M318 464v-48"/>
+    <path class="flow" pathLength="1" d="M54 390h12v74h344M318 464v-48"/>
     <rect x="304" y="402" width="30" height="14"/><circle cx="312" cy="409" r="3"/><circle cx="326" cy="409" r="3"/>
   </g>
   <g class="lay lay-elektro" data-layer="elektro">
-    <rect x="560" y="326" width="24" height="40"/><text x="561" y="320" class="lay-tag">RE</text>
+    <rect x="560" y="326" width="24" height="40"/><text x="554" y="350" text-anchor="end" class="lay-tag">RE</text>
     <path class="lay-dash" d="M572 326V317H210M584 340V182H210M572 366v54H400"/>
     ${lamp(210, 317)}${lamp(470, 317)}${lamp(210, 182)}${lamp(470, 182)}<rect x="392" y="414" width="14" height="12"/>
   </g>

@@ -73,7 +73,7 @@ module.exports = {
         { id: 'plyn', label: 'Plyn', p: 'Od hlavního uzávěru (HUP) ke kotli a sporáku, s revizí vlastním technikem.' },
         { id: 'elektro', label: 'Elektro', p: 'Rozvaděč, okruhy pro světla a zásuvky, revize elektrických zařízení.' },
       ],
-      rooms: ['2.NP koupelna', '2.NP ložnice', '1.NP kuchyň', '1.NP obývák', '1.PP technická místnost'],
+      rooms: ['2.NP koupelna', '2.NP ložnice', '1.NP kuchyň', '1.NP obývák', '1.PP technika'],
       note: 'Schéma je ilustrační, ne projekt.',
     },
     map: {
