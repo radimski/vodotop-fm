@@ -1,0 +1,14 @@
+{
+  // Náhled na workers.dev v demo režimu: noindex, pruh „Ukázka“, vypnuté formuláře.
+  // Před spuštěním na doméně klienta smazat demo/, tento soubor a site/.assetsignore.
+  "name": "vodotop-fm",
+  "main": "demo/worker.js",
+  "compatibility_date": "2025-09-01",
+  "assets": {
+    "directory": "site",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": true
+  },
+  "observability": { "enabled": true }
+}

@@ -1,0 +1,8 @@
+functions
+api/lib
+api/config.example.php
+api/form.php
+*.php
+.htaccess
+web.config
+.gitignore

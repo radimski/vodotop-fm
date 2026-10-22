@@ -3,3 +3,4 @@ export/
 build/config.php
 build/originals/
 *.log
+.wrangler/
