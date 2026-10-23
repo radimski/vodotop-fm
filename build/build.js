@@ -84,10 +84,10 @@ function businessLd() {
       addressCountry: site.country,
     },
     image: `${site.origin}/img/${images.find((i) => i.slug === 'og').file}`,
-    areaServed: [
-      { '@type': 'City', name: 'Baška' },
-      { '@type': 'AdministrativeArea', name: 'Frýdek-Místek' },
-    ],
+    // Places from the company's own references (content/cs.js → home.map.places).
+    areaServed: [{ '@type': 'AdministrativeArea', name: 'okres Frýdek-Místek' }].concat(
+      t.home.map.places.map((p) => ({ '@type': 'City', name: p.n }))
+    ),
   };
   if (site.hours) {
     ld.openingHoursSpecification = [

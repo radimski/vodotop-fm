@@ -33,13 +33,25 @@ async function brandedShare() {
       .resize(180, 180)
       .png({ compressionLevel: 9 })
       .toBuffer();
-    const word = await sharp(lockup).resize({ width: 880, withoutEnlargement: true }).png().toBuffer();
-    const wordMeta = await sharp(word).metadata();
+    // Share image in the site's look: logo, one line of what they do and the
+    // phone on white, the hall photo on the right, red-over-blue band.
+    const hall = source('hala2.jpg');
+    const word = await sharp(logo).resize({ width: 400 }).png().toBuffer();
+    const text = Buffer.from(`<svg width="520" height="630" xmlns="http://www.w3.org/2000/svg">
+<style>.h{font:700 40px Arial,Helvetica,sans-serif;fill:#14181e}.p{font:400 24px Arial,Helvetica,sans-serif;fill:#454a52}.t{font:700 30px Arial,Helvetica,sans-serif;fill:#c4121a}</style>
+<text x="50" y="290" class="h">Voda, topení, plyn</text>
+<text x="50" y="340" class="h">a elektro</text>
+<text x="50" y="400" class="p">Kunčičky u Bašky · od roku 1994</text>
+<text x="50" y="470" class="t">558 440 040</text>
+<rect x="0" y="612" width="520" height="10" fill="#c4121a"/><rect x="0" y="622" width="520" height="8" fill="#1d4e8f"/>
+</svg>`);
+    const layers = [{ input: text, left: 0, top: 0 }, { input: word, left: 50, top: 110 }];
+    if (hall) layers.unshift({ input: await open(hall).resize(680, 630, { fit: 'cover' }).toBuffer(), left: 520, top: 0 });
     const og = await sharp({
-      create: { width: 1200, height: 630, channels: 3, background: ink },
+      create: { width: 1200, height: 630, channels: 3, background: '#ffffff' },
     })
-      .composite([{ input: word, left: Math.round((1200 - wordMeta.width) / 2), top: Math.round((630 - wordMeta.height) / 2) }])
-      .jpeg({ quality: 88, mozjpeg: true })
+      .composite(layers)
+      .jpeg({ quality: 84, mozjpeg: true })
       .toFile(path.join(IMG, 'og.jpg'));
     fs.writeFileSync(path.join(SITE, 'favicon.svg'), faviconSvg());
     await sharp(mark).toFile(path.join(SITE, 'apple-touch-icon.png'));

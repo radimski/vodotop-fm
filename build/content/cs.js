@@ -48,13 +48,13 @@ module.exports = {
   home: {
     eyebrow: 'Kunčičky u Bašky · od roku 1994',
     title: 'Voda, topení, plyn a elektro pro domy, bytovky i firmy',
-    factsLine: 'Firma z Kunčiček u Bašky, od roku 1994. Třicet lidí, vlastní revizní technik a členství v Cechu instalatérů.',
+    factsLine: 'Firma z Kunčiček u Bašky, od roku 1994. Třicet lidí, vlastní revizní technik a od roku 1997 člen Cechu instalatérů ČR.',
     heroWords: [['Voda', 'cold'], ['Topení', 'hot'], ['Plyn', 'hot'], ['Elektro', 'cold']],
     heroSub: 'pro rodinné domy, bytovky i firmy',
-    lead: 'Montujeme a opravujeme rozvody, kotle a kotelny, děláme revize plynu a elektro. Od rodinného domu po nemocnici, v okolí Frýdku-Místku.',
+    lead: 'Montujeme a opravujeme rozvody vody, plynu a topení, kotle a kotelny. Děláme revize plynových a elektrických zařízení. Pro rodinné domy, bytové domy, obce i firmy z okolí Frýdku-Místku.',
     heroAlt: 'Hala VODOTOP FM v Kunčičkách u Bašky s logem firmy',
     heroCaption: 'Obr. 1 — Hala a sídlo, Kunčičky u Bašky 355',
-    callouts: ['Kancelář a sklad', 'Vlastní výroba EPS', 'Na trhu od roku 1994'],
+    callouts: ['Kancelář a sklad', 'Sídlo firmy', 'Na trhu od roku 1994'],
     stats: [
       { n: '30', count: true, l: 'lidí ve firmě' },
       { n: '17', count: true, l: 'značek kotlů v servisu' },
@@ -65,7 +65,7 @@ module.exports = {
     layers: {
       tag: 'Co u vás uděláme',
       title: 'Voda, topení, plyn i elektro od jedné firmy',
-      lead: 'Na schématu domu si můžete zobrazit jednotlivé rozvody. Všechny montujeme a revidujeme sami, takže nemusíte shánět a domlouvat čtyři různé řemeslníky.',
+      lead: 'Na schématu domu si můžete zobrazit jednotlivé rozvody. Všechny montujeme sami, plyn a elektro u nás projde i revizí.',
       all: 'Vše',
       items: [
         { id: 'voda', label: 'Voda', p: 'Vodoměr, stoupačka, přípojky ke kuchyni a koupelně, odpady a kanalizace.' },
@@ -73,17 +73,18 @@ module.exports = {
         { id: 'plyn', label: 'Plyn', p: 'Od hlavního uzávěru (HUP) ke kotli a sporáku, s revizí vlastním technikem.' },
         { id: 'elektro', label: 'Elektro', p: 'Rozvaděč, okruhy pro světla a zásuvky, revize elektrických zařízení.' },
       ],
-      rooms: ['2.NP koupelna', '2.NP ložnice', '1.NP kuchyň', '1.NP obývák', '1.PP technika'],
+      rooms: ['2. NP koupelna', '2. NP ložnice', '1. NP kuchyň', '1. NP obývák', '1. PP technika'],
       note: 'Schéma je ilustrační, ne projekt.',
     },
     map: {
       tag: 'Reference',
       title: 'Kde jsme pracovali',
-      lead: 'Obce z našich referencí. Jezdíme hlavně po Frýdecko-Místecku a Beskydech, za většími zakázkami i do Ostravy.',
+      lead: 'Obce, kde jsme v minulosti pracovali. Podle našich referencí z let 2004–2014.',
       hall: 'Hala VODOTOP FM',
       ringLabel: 'km od haly',
       bands: ['do 10 km', '10–20 km', '20–30 km'],
       more: 'Seznam zakázek',
+      clientsLead: 'Pracovali jsme mimo jiné pro',
       places: [
         { n: 'Frýdek-Místek', lat: 49.683, lon: 18.35, w: 'Nemocnice, DISTEP, SVJ, školy a město' },
         { n: 'Baška', lat: 49.645, lon: 18.372, w: 'Radiátory a kotle v ZŠ, rekonstrukce MŠ' },
@@ -137,15 +138,15 @@ module.exports = {
     ],
     tradesEyebrow: 'Co děláme',
     tradesTitle: 'Služby',
-    tradesLead: 'Instalatéra, topenáře, plynaře, elektrikáře i zedníka pošleme z jedné firmy. Nemusíte je domlouvat zvlášť.',
+    tradesLead: 'Instalatéra, topenáře, plynaře, elektrikáře i zedníka máme ve vlastní firmě.',
     tradesMore: 'Všechny služby',
     trades: [
       { id: 'voda', h: 'Voda a kanalizace', p: 'Rozvody vody a odpadů, stoupačky v bytových domech, novostavby i rekonstrukce.' },
-      { id: 'topeni', h: 'Topení a kotle', p: 'Montáž a servis plynových kotlů a elektrokotlů, radiátory, podlahové topení, kotelny nad 50 kW.' },
+      { id: 'topeni', h: 'Topení a kotle', p: 'Montáž a servis plynových kotlů a elektrokotlů, radiátory a termostatické ventily, kotelny nad 50 kW.' },
       { id: 'plyn', h: 'Plyn a revize', p: 'Plynovody od HUP po spotřebiče, výměna stoupaček, revize plynových zařízení a tlakových nádob.' },
       { id: 'elektro', h: 'Elektro', p: 'Elektroinstalace a revize elektrických zařízení, i jako součást větší zakázky.' },
       { id: 'energie', h: 'Tepelná čerpadla a solár', p: 'Montáž tepelných čerpadel včetně projektové dokumentace a solárních systémů.' },
-      { id: 'kamera', h: 'Kamera do potrubí', p: 'Prohlídka potrubí, kanalizace a komínů kamerou, od průměru 20 mm. Najdeme závadu bez bourání.' },
+      { id: 'kamera', h: 'Kamera do potrubí', p: 'Kontrola vodovodů, kanalizace a komínů kamerou, od průměru 20 mm.' },
     ],
     whoEyebrow: 'Zákazníci',
     whoTitle: 'Pro koho pracujeme',
@@ -157,7 +158,7 @@ module.exports = {
       },
       {
         h: 'Bytové domy a SVJ',
-        p: 'Výměna stoupaček vody a plynu, radiátorů a ležatých rozvodů za provozu domu.',
+        p: 'Výměna stoupaček vody a plynu, radiátorů a ležatých rozvodů.',
         ex: 'Například: plynovod od HUP po spotřebiče pro SVJ Lískovecká 2867.',
       },
       {
@@ -183,9 +184,9 @@ module.exports = {
     refsMore: 'Seznam zakázek',
     extraEyebrow: 'K tomu navíc',
     extraTitle: 'Z vlastní haly v Kunčičkách',
-    extraLead: 'Kromě řemesel máme vlastní výrobu, techniku a dopravu. Půjčíme, dovezeme a vyvrtáme.',
+    extraLead: 'Kromě řemesel nabízíme polystyren, techniku a dopravu.',
     extra: [
-      { h: 'Polystyren EPS', p: 'Výroba desek EPS 50 až 150, drť a kuličky. Typy pro program Nová zelená úsporám.' },
+      { h: 'Polystyren EPS', p: 'Desky EPS 50 až 150, drť a kuličky. Typy pro program Nová zelená úsporám.' },
       { h: 'Korunkové vrtání', p: 'Prostupy zdí a stropů Hilti, průměr 50–300 mm, délka až 1,3 m.' },
       { h: 'Lešení a doprava', p: 'Hliníková věž do 10 m, lešení GRAF a velkoobjemová Avia s přívěsem.' },
     ],
@@ -204,14 +205,14 @@ module.exports = {
       {
         id: 'voda',
         h: 'Voda a kanalizace',
-        p: 'Nové rozvody i opravy starých. V bytových domech měníme stoupačky a ležaté rozvody tak, aby se v domě dalo dál bydlet.',
+        p: 'Nové rozvody i opravy starých. V bytových domech měníme stoupací a ležaté rozvody.',
         items: ['Rozvody studené a teplé vody', 'Kanalizace a odpady', 'Stoupací a ležaté rozvody v bytových domech', 'Montáž vodoměrů na dálkový odečet (Maddalena)', 'Rekonstrukce koupelen a sociálních zařízení'],
       },
       {
         id: 'topeni',
         h: 'Topení a kotle',
         p: 'Montujeme 17 značek kotlů a děláme na ně záruční i pozáruční servis. Máme oprávnění na kotelny nad 50 kW.',
-        items: ['Plynové kotle a elektrokotle: Baxi, Geminox, Protherm, Therm, ACV, Dakon, Mora', 'Radiátory, termostatické ventily, podlahové topení', 'Kotelny nad 50 kW a předávací stanice', 'Hydronické vyvážení otopné soustavy', 'Záruční a pozáruční servis'],
+        items: ['Servis a revize kotlů mimo jiné: Baxi, Geminox, Protherm, Therm, ACV, Dakon, Mora', 'Radiátory a termostatické ventily', 'Kotelny nad 50 kW a předávací stanice', 'Hydronické vyvážení otopné soustavy', 'Záruční a pozáruční servis'],
       },
       {
         id: 'plyn',
@@ -223,7 +224,7 @@ module.exports = {
         id: 'elektro',
         h: 'Elektro',
         p: 'Elektroinstalace samostatně i jako součást větší zakázky, včetně revize.',
-        items: ['Elektroinstalace', 'Revize elektrických zařízení', 'Elektro k měřičům a technologiím'],
+        items: ['Elektroinstalace', 'Revize elektrických zařízení'],
       },
       {
         id: 'energie',
@@ -234,26 +235,26 @@ module.exports = {
       {
         id: 'kamera',
         h: 'Kamera do potrubí',
-        p: 'Než se začne bourat, podíváme se dovnitř. Kamera ukáže, kde je ucpávka, prasklina nebo špatný spád.',
+        p: 'Kontrola potrubí a komínů kamerou zevnitř.',
         items: ['Kanalizace a komíny, průměr 63–200 mm', 'Vodovody, kanalizace a duté prostory od vstupu 20 mm'],
       },
       {
         id: 'stavba',
         h: 'Stavba a zámečnictví',
-        p: 'Zednické práce k instalacím děláme sami, takže po nás nemusí přijít další firma.',
+        p: 'Zednické práce k instalacím děláme sami.',
         items: ['Rekonstrukce budov', 'Zednické práce', 'Zámečnické a soustružnické práce', 'Projektování', 'Prodej instalačního materiálu'],
       },
       {
         id: 'eps',
         h: 'Polystyren EPS',
-        p: 'Pěnový polystyren vyrábíme ve vlastní hale v Kunčičkách u Bašky.',
+        p: 'Pěnový polystyren EPS 50 až 150, drť a kuličky.',
         items: ['Desky EPS 50, 70, 100S, 100Z, 150Z', 'Polystyrenová drť a kuličky', 'Typy v programu Nová zelená úsporám'],
       },
       {
         id: 'technika',
         h: 'Technika a doprava',
-        p: 'Techniku půjčujeme i nasazujeme na vlastních zakázkách.',
-        items: ['Korunkové vrtání Hilti, průměr 50–300 mm, délka do 1300 mm', 'Hliníková pojízdná věž CUSTERS do 10 m', 'Lešení GRAF', 'Autodoprava velkoobjemovou Avií, 50 + 20 m³, do 3500 kg'],
+        p: 'Zapůjčíme lešení, k tomu korunkové vrtání a autodoprava.',
+        items: ['Korunkové vrtání Hilti, průměr 50–300 mm, délka do 1300 mm', 'Zapůjčení hliníkové věže CUSTERS do 10 m', 'Zapůjčení lešení GRAF', 'Autodoprava velkoobjemovou Avií, 50 + 20 m³, do 3500 kg'],
       },
     ],
     brandsTitle: 'Materiály, na které jsou naši lidé proškoleni',
@@ -270,14 +271,14 @@ module.exports = {
     clientsTitle: 'Pro koho pracujeme',
     listTitle: 'Zakázky podle roku',
     // TODO(klient): doplnit novější zakázky (2015+) s fotkami hotové práce.
-    note: 'Novější zakázky s fotkami doplňujeme.',
+    note: '',
     photoTodo: 'Sem přijdou fotky hotových prací',
   },
 
   profile: {
     eyebrow: 'O firmě',
-    title: 'Od oprav v bytech po kotelny a nemocnice',
-    lead: 'Začínali jsme v roce 1994 opravami bytových rozvodů vody, plynu, topení a elektřiny. Teď stavíme kotelny a měníme rozvody v nemocnici, a pořád jezdíme i k rodinným domům.',
+    title: 'Od roku 1994 v Kunčičkách u Bašky',
+    lead: 'Začínali jsme v roce 1994 opravami bytových rozvodů vody, plynu, topení a elektřiny. Postupně jsme se dostali i ke kotelnám a rekonstrukcím rozvodů v nemocnici ve Frýdku-Místku. Děláme i rodinné domy.',
     paras: [
       'Postupně jsme přibírali lidi i řemesla. Dnes děláme vodu, topení, plyn, elektro i zednické práce, včetně revizí plynových a elektrických zařízení. Velké zakázky stavíme na klíč.',
       'Na svařování posíláme jen lidi s platnou státní svářečskou zkouškou. Máme oprávnění na montáž kotelen nad 50 kW a pro případ škody na díle jsme pojištěni na 20 milionů korun.',
@@ -288,13 +289,13 @@ module.exports = {
       { k: 'Začátek', v: '1994' },
       { k: 'Lidí ve firmě', v: '30' },
       { k: 'Pojištění díla', v: '20 000 000 Kč' },
-      { k: 'Cech instalatérů', v: 'č. 0410' },
+      { k: 'Člen Cechu instalatérů', v: 'od roku 1997' },
       { k: 'Kotelny', v: 'nad 50 kW' },
       { k: 'Značek kotlů v servisu', v: '17' },
     ],
     placeEyebrow: 'Kde nás najdete',
     placeTitle: 'Vlastní hala v Kunčičkách u Bašky',
-    placeLead: 'Kancelář, sklad, výroba polystyrenu a vozový park jsou na jednom místě, kousek od silnice z Frýdku-Místku na Frýdlant.',
+    placeLead: 'Kancelář, sklad a vozový park máme na jednom místě v Kunčičkách u Bašky.',
     photos: [
       { slug: 'gallery-5', alt: 'Hala VODOTOP FM s modrým pruhem a logem' },
       { slug: 'gallery-9', alt: 'Nákladní vůz VODOTOP FM s nápisem Polystyrénka' },
@@ -306,8 +307,8 @@ module.exports = {
 
   jobs: {
     eyebrow: 'Práce u nás',
-    title: 'Rádi přibereme instalatéry, topenáře, plynaře a zedníky',
-    lead: 'Jste řemeslník a hledáte stálou práci blízko domova? Zázemí máme ve vlastní hale v Kunčičkách u Bašky.',
+    title: 'Práce pro instalatéry, topenáře, plynaře a zedníky',
+    lead: 'Hledáte práci instalatéra, topenáře, plynaře nebo zedníka? Ozvěte se nám.',
     // TODO(klient): potvrdit, koho a jestli teď hledají; inzerát z 2009 obsahoval nezákonné požadavky.
     wantTitle: 'Koho hledáme',
     want: [
@@ -406,7 +407,7 @@ module.exports = {
         'Vrtání, lešení, doprava': { ph: 'Například: prostup zdí 150 mm pro odvětrání, zeď 45 cm.' },
         'Práce u nás': { ph: 'Napište pár řádků o sobě a své praxi.' },
       },
-      consentBefore: 'Beru na vědomí, že údaje z poptávky použijete jen k jejímu vyřízení a smažete je nejpozději do roka, pokud nevznikne zakázka. Podrobnosti v ',
+      consentBefore: 'Beru na vědomí, že údaje z poptávky použijete jen k jejímu vyřízení a smažete je nejpozději do jednoho roku, pokud nevznikne zakázka. Podrobnosti v ',
       consentLink: 'zásadách ochrany osobních údajů',
       consentAfter: '.',
       submit: 'Odeslat poptávku',

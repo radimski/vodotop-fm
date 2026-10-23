@@ -206,7 +206,7 @@ function callButtons(t, { light = false } = {}) {
 function pageHead(t, tag, title, lead, photo) {
   // Optional real photo of the company on the right, so subpages open with something of theirs.
   const pic = photo
-    ? `<div class="hidden md:block">${img(photo.slug, { cls: 'aspect-[4/3] h-auto w-full rounded object-cover', alt: photo.alt, eager: true, sizes: '(min-width:1024px) 420px, 40vw' })}</div>`
+    ? `<div class="hidden md:block">${img(photo.slug, { cls: 'aspect-[4/3] h-auto w-full rounded object-cover', alt: photo.alt, sizes: '(min-width:1024px) 420px, 40vw' })}</div>`
     : '';
   return `<section class="grid-paper border-b border-line">
   <div class="shell grid items-center gap-10 py-12 sm:py-16 ${photo ? 'md:grid-cols-[1.3fr_.7fr] lg:py-14' : 'lg:py-20'}">
@@ -254,11 +254,33 @@ function calculator(t) {
     .map(([v, d], i) => `<button type="button" class="chip-on-print" data-calc-type="${esc(v)}" aria-pressed="${i === 0}" data-desc="${esc(d)}">${esc(v)}</button>`)
     .join('');
   return `<section id="kalkulacka" class="border-y border-line bg-paper-2 py-section">
-  <div class="shell grid gap-12 lg:grid-cols-[.95fr_1.05fr] lg:gap-16">
+  <div class="shell grid gap-10 lg:grid-cols-[.95fr_1.05fr] lg:gap-x-16 lg:gap-y-10">
     <div>
       <h2 class="text-display-xl">${esc(c.title)}</h2>
       <p class="mt-4 max-w-lg text-lead text-muted">${esc(c.lead)}</p>
-      <figure class="mt-10 rounded border border-line bg-white p-4 sm:p-5" aria-hidden="true">
+    </div>
+    <div class="rounded border border-line bg-white p-5 sm:p-8 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start" data-calc data-cut-names="${esc(JSON.stringify(c.sections))}">
+      <div class="grid gap-7 sm:grid-cols-2">
+        <label class="block" for="calc-area"><span class="tag text-muted">${esc(c.area)}</span>
+          <input id="calc-area" class="calc-field" type="text" inputmode="decimal" autocomplete="off" maxlength="9" value="100" aria-describedby="calc-area-empty" data-calc-area></label>
+        <label class="block" for="calc-thick"><span class="tag text-muted">${esc(c.thickness)}</span>
+          <select id="calc-thick" class="calc-field" data-calc-thick>${thick.map((n) => `<option value="${n}"${n === 160 ? ' selected' : ''}>${n} mm</option>`).join('')}</select></label>
+      </div>
+      <fieldset class="mt-8">
+        <legend class="tag text-muted">${esc(c.type)}</legend>
+        <div class="mt-3 flex flex-wrap gap-2">${chips}</div>
+        <p class="mt-3 text-small text-muted" aria-live="polite" data-calc-type-note>${esc(c.types[0][1])}</p>
+      </fieldset>
+      <label class="mt-6 flex min-h-11 items-center gap-3 text-small" for="calc-reserve"><input id="calc-reserve" type="checkbox" class="h-5 w-5" checked data-calc-reserve>${esc(c.reserve)}</label>
+      <dl class="mt-6 grid grid-cols-2 border-t border-line">
+        <div class="border-r border-line pt-5 pr-4"><dt class="tag text-muted">${esc(c.volume)}</dt><dd class="calc-out mt-2 text-display-xl"><output data-calc-volume>16,8</output> <span class="text-display-sm">m³</span></dd></div>
+        <div class="pt-5 pl-4 sm:pl-6"><dt class="tag text-muted">${esc(c.boards)}</dt><dd class="calc-out mt-2 text-display-xl"><output data-calc-boards>210</output> <span class="text-display-sm">ks</span></dd></div>
+      </dl>
+      <p id="calc-area-empty" class="mt-5 text-small font-semibold text-red-dark" data-calc-empty hidden>${esc(c.empty)}</p>
+      <p class="mt-5 text-tiny text-muted">${esc(c.note)}</p>
+      <a class="btn-primary mt-6 w-full sm:w-auto" href="${inquiryHref('Polystyren EPS')}" data-calc-cta>${esc(c.cta)}</a>
+    </div>
+    <figure class="lg:col-start-1 lg:row-start-2 rounded border border-line bg-white p-4 sm:p-5" aria-hidden="true" data-calc-cut-fig>
         <figcaption class="flex justify-between tag text-muted"><span>${esc(c.section)}</span><span data-calc-section-name>${esc(c.sections.wall)}</span></figcaption>
         <svg class="calc-cut mt-3 h-auto w-full" viewBox="0 0 300 190">
           <defs>
@@ -289,28 +311,6 @@ function calculator(t) {
           </g>
         </svg>
       </figure>
-    </div>
-    <div class="rounded border border-line bg-white p-5 sm:p-8" data-calc data-cut-names="${esc(JSON.stringify(c.sections))}">
-      <div class="grid gap-7 sm:grid-cols-2">
-        <label class="block" for="calc-area"><span class="tag text-muted">${esc(c.area)}</span>
-          <input id="calc-area" class="calc-field" type="text" inputmode="decimal" autocomplete="off" maxlength="9" value="100" aria-describedby="calc-area-empty" data-calc-area></label>
-        <label class="block" for="calc-thick"><span class="tag text-muted">${esc(c.thickness)}</span>
-          <select id="calc-thick" class="calc-field" data-calc-thick>${thick.map((n) => `<option value="${n}"${n === 160 ? ' selected' : ''}>${n} mm</option>`).join('')}</select></label>
-      </div>
-      <fieldset class="mt-8">
-        <legend class="tag text-muted">${esc(c.type)}</legend>
-        <div class="mt-3 flex flex-wrap gap-2">${chips}</div>
-        <p class="mt-3 text-small text-muted" aria-live="polite" data-calc-type-note>${esc(c.types[0][1])}</p>
-      </fieldset>
-      <label class="mt-6 flex min-h-11 items-center gap-3 text-small" for="calc-reserve"><input id="calc-reserve" type="checkbox" class="h-5 w-5" checked data-calc-reserve>${esc(c.reserve)}</label>
-      <dl class="mt-6 grid grid-cols-2 border-t border-line">
-        <div class="border-r border-line pt-5 pr-4"><dt class="tag text-muted">${esc(c.volume)}</dt><dd class="calc-out mt-2 text-display-xl"><output data-calc-volume>16,8</output> <span class="text-display-sm">m³</span></dd></div>
-        <div class="pt-5 pl-4 sm:pl-6"><dt class="tag text-muted">${esc(c.boards)}</dt><dd class="calc-out mt-2 text-display-xl"><output data-calc-boards>210</output> <span class="text-display-sm">ks</span></dd></div>
-      </dl>
-      <p id="calc-area-empty" class="mt-5 text-small font-semibold text-red-dark" data-calc-empty hidden>${esc(c.empty)}</p>
-      <p class="mt-5 text-tiny text-muted">${esc(c.note)}</p>
-      <a class="btn-primary mt-6 w-full sm:w-auto" href="${inquiryHref('Polystyren EPS')}" data-calc-cta>${esc(c.cta)}</a>
-    </div>
   </div>
 </section>`;
 }
@@ -360,15 +360,14 @@ function layersSection(t) {
   return `<section class="grid-paper border-b border-line py-section">
   <div class="shell">
     ${sectionTop('01', c.tag, c.title, c.lead)}
-    <div class="mt-12 grid gap-10 lg:grid-cols-[1.35fr_.65fr] lg:items-start">
-      <figure class="reveal rounded-xl border border-line bg-white p-3 sm:p-6" data-house>
+    <!-- Phone order: buttons, drawing, legend. Desktop: drawing left, buttons and legend right. -->
+    <div class="mt-10 grid gap-6 lg:mt-12 lg:grid-cols-[1.35fr_.65fr] lg:items-start lg:gap-x-10 lg:gap-y-8">
+      <div class="flex flex-wrap gap-2 lg:col-start-2 lg:row-start-1" role="group" aria-label="${esc(c.tag)}">${btns}</div>
+      <figure class="reveal rounded-xl border border-line bg-white p-3 sm:p-6 lg:col-start-1 lg:row-span-2 lg:row-start-1" data-house>
         ${svg}
         <figcaption class="tag mt-3">${esc(c.note)}</figcaption>
       </figure>
-      <div class="order-first lg:order-none">
-        <div class="flex flex-wrap gap-2" role="group" aria-label="${esc(c.tag)}">${btns}</div>
-        <ul class="mt-8 grid gap-5">${legend}</ul>
-      </div>
+      <ul class="grid gap-5 lg:col-start-2 lg:row-start-2">${legend}</ul>
     </div>
   </div>
 </section>`;
@@ -429,6 +428,7 @@ function mapSection(t) {
         <h2 class="text-display-md">${esc(m.title)}</h2>
         <p class="mt-2 max-w-lg text-muted">${esc(m.lead)}</p>
         <ul class="mt-5 grid grid-cols-2 gap-x-5 text-small sm:gap-x-8 sm:text-base">${list}</ul>
+        <p class="mt-5 text-small text-muted">${esc(m.clientsLead)} ${t.home.refsClients.slice(0, 6).map((c) => `<span class="font-semibold text-ink">${esc(c)}</span>`).join(", ")} a další.</p>
         <p class="mt-4"><a class="link text-small" href="reference.html">${esc(m.more)}</a></p>
       </div>
     </div>
@@ -451,7 +451,7 @@ function contactBand(t) {
       <ul class="mt-4 grid">
         <li>${mailLink(site.email, 'break-all font-semibold hover:text-red')}</li>
         <li>${mapsLink(addressHtml(', '), 'hover:text-red')}</li>
-        <li class="mt-3 border-t border-line pt-3 text-small text-muted">${esc(h.contactUrgent)} ${telLink(boss.phoneHref, boss.phone, 'font-bold text-ink')}</li>
+        <li class="mt-3 border-t border-line pt-3 text-small text-muted">${esc(h.contactUrgent)} ${telLink(boss.phoneHref, local(boss.phone), 'font-bold text-ink')}</li>
       </ul>
       <a class="btn-primary mt-6 w-full" href="${inquiryHref()}">${esc(t.common.inquiry)}</a>
     </div>
@@ -610,13 +610,13 @@ function references(t, refs) {
     <div>
       <h2 class="text-display-md">${esc(r.clientsTitle)}</h2>
       <ul class="mt-4 border-t border-line">${clients}</ul>
-      <div class="photo-todo mt-8 flex min-h-28 items-center justify-center border border-dashed border-line-2 p-4 text-center text-small text-muted"><!-- TODO(foto): fotky hotových zakázek od klienta -->${esc(r.photoTodo)}</div>
+      <!-- TODO(foto): fotky hotových zakázek od klienta, viz redeye/klienti/vodotop-fm/fotky.md -->
     </div>
     <div>
       <h2 class="text-display-md">${esc(r.listTitle)}</h2>
       <div class="mt-5 flex flex-wrap gap-2" data-filters>${filters}</div>
       <ul class="mt-6 border-t border-line">${items}</ul>
-      <p class="tag mt-6">${esc(r.note)}</p>
+      ${r.note ? `<p class="tag mt-6">${esc(r.note)}</p>` : ''}
     </div>
   </div>
 </section>
@@ -628,7 +628,7 @@ function personCard(p) {
   return `<li class="detail p-6">
       <p class="tag tag-red">${esc(p.role)}</p>
       <p class="cond mt-2 text-display-md">${esc(p.name)}</p>
-      <p class="mt-3">${telLink(p.phoneHref, p.phone, 'font-bold hover:text-red')}</p>
+      <p class="mt-3">${telLink(p.phoneHref, local(p.phone), 'font-bold hover:text-red')}</p>
       <p>${mailLink(p.email, 'break-all hover:text-red')}</p>
     </li>`;
 }

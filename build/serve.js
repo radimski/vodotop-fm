@@ -49,6 +49,8 @@ http
       return;
     }
     if (rel.endsWith('/')) rel += 'index.html';
+    // Like Cloudflare: /kontakty serves kontakty.html.
+    if (!path.extname(rel) && fs.existsSync(path.join(ROOT, rel + '.html'))) rel += '.html';
     const abs = path.join(ROOT, rel);
 
     // never serve anything outside the project
