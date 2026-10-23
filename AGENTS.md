@@ -19,3 +19,8 @@ Client notes, audit and open questions: `../redeye/klienti/vodotop-fm/` (`info.m
 - Design "technický výkres": Archivo (condensed headlines) + IBM Plex Mono labels, drafting-paper grid, logo red + blueprint blue. Client identity, not the REDEYE palette.
 - Features: inquiry form by job type (`build/content/cs.js` → `contact.form.types`), EPS calculator (`build/main.js` → `calculator`) that pre-fills the form via `?typ=&mnozstvi=`.
 - No AI features. If any are added, they go through OmniRoute (see REDEYE notes).
+
+## Design a texty
+
+- Při jakékoli práci na vzhledu (layout, barvy, typografie, obrázky, animace) použij skill `redeye-webdesign`.
+- Při jakékoli práci na textech (nadpisy, služby, CTA, SEO stránky, nabídky, audity) použij skill `redeye-copywriting`.
