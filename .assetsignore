@@ -1,0 +1,30 @@
+# Náhled na workers.dev servíruje kořen repa (wrangler.jsonc → assets.directory "."),
+# ven smí jen navrhy/ a dosavadní ukázka v site/. Všechno ostatní sem.
+.git
+.claude
+.wrangler
+node_modules
+build
+demo
+export
+*.md
+package.json
+package-lock.json
+wrangler.jsonc
+.struktura.json
+.gitignore
+.gitattributes
+navrhy/spolecne/obsah.js
+navrhy/spolecne/casti.js
+navrhy/spolecne/sestav.js
+navrhy/_headers
+navrhy/spolecne/sablony
+site/functions
+site/api
+site/*.php
+site/.htaccess
+site/web.config
+site/.gitignore
+site/.assetsignore
+site/_headers
+site/_redirects

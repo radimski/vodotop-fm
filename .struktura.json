@@ -1,6 +1,6 @@
 {
   "_popis": "Pravidla složek podle redeye/docs/struktura.md. Repo má ještě starší rozložení (site/ + build/, rulebook §1), kontrolní skript zatím nemá.",
-  "koren": ["build", "site", "demo", "navrhy", ".gitignore", ".struktura.json", "package.json", "package-lock.json", "wrangler.jsonc", "README.md", "AGENTS.md", "CLAUDE.md", "DESIGN.md", "RULEBOOK.md"],
+  "koren": ["build", "site", "demo", "navrhy", ".gitignore", ".assetsignore", ".struktura.json", "package.json", "package-lock.json", "wrangler.jsonc", "README.md", "AGENTS.md", "CLAUDE.md", "DESIGN.md", "RULEBOOK.md"],
   "aplikace": ["site"],
   "vyjimky": ["navrhy/_headers"],
   "maxVelikostMB": 5

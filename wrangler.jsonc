@@ -1,13 +1,14 @@
 {
-  // Náhled na workers.dev v demo režimu: noindex, pruh „Ukázka“, vypnuté formuláře.
-  // Před spuštěním na doméně klienta smazat demo/, tento soubor a site/.assetsignore.
+  // Náhled návrhů na workers.dev (redeye/docs/navrhy.md, šablona _build_tools/navrhy/):
+  // / → /navrhy/, dosavadní ukázka na /site/, noindex, pruh „Ukázka“, vypnuté formuláře.
+  // Ven jde jen to, co nevylučuje .assetsignore v kořeni.
+  // Před spuštěním na doméně klienta smazat demo/ a tento náhled nahradit ostrým nastavením.
   "name": "vodotop-fm",
   "main": "demo/worker.js",
   "compatibility_date": "2025-09-01",
   "assets": {
-    "directory": "site",
+    "directory": ".",
     "binding": "ASSETS",
-    "not_found_handling": "404-page",
     "run_worker_first": true
   },
   "observability": { "enabled": true }
