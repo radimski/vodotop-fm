@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>VODOTOP FM · 4 návrhy webu</title>
+<link rel="icon" href="spolecne/img/favicon.svg" type="image/svg+xml">
+<style>
+:root { --ink: #14181d; --muted: #545b63; --paper: #f3f2ee; --sheet: #fff; --line: rgba(20,24,29,.14); --red: #c4161c; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.55 "Segoe UI", system-ui, sans-serif; }
+header, main { width: min(1280px, calc(100% - 32px)); margin: 0 auto; }
+header { padding: 40px 0 8px; }
+.brand { display: inline-flex; background: #fff; padding: 8px 12px; margin-bottom: 20px; }
+.brand img { height: 40px; width: auto; display: block; }
+h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 8px; letter-spacing: -.02em; }
+header p { margin: 0; color: var(--muted); max-width: 72ch; }
+.tabs { display: flex; gap: 8px; margin-top: 20px; }
+.tabs button { min-height: 44px; padding: 0 18px; border: 1px solid var(--ink); background: none; color: var(--ink); font: 600 .95rem "Segoe UI", sans-serif; cursor: pointer; }
+.tabs button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+main { padding: 24px 0 64px; display: grid; gap: 56px; }
+.design { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: start; padding-top: 32px; border-top: 1px solid var(--line); }
+.design h2 { margin: 0 0 6px; font-size: 1.6rem; letter-spacing: -.02em; }
+.design h2 span { color: var(--red); }
+.design p { margin: 0 0 10px; color: var(--muted); max-width: 60ch; }
+.design .src { font-size: .9rem; }
+.open { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; margin-top: 6px; background: var(--ink); color: #fff; text-decoration: none; font-weight: 600; }
+.open:hover { background: var(--red); }
+.desk { margin-top: 20px; border: 1px solid var(--line); background: var(--sheet); border-radius: 10px; overflow: hidden; box-shadow: 0 24px 50px -30px rgba(0,0,0,.45); }
+.desk-bar { display: flex; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.desk-bar i { width: 10px; height: 10px; border-radius: 50%; background: #d8d8d4; }
+.desk-view { position: relative; width: 100%; aspect-ratio: 1440 / 860; overflow: hidden; }
+.desk-view iframe { position: absolute; left: 0; top: 0; width: 1440px; height: 860px; border: 0; transform-origin: 0 0; }
+.phone { width: 300px; flex: none; padding: 12px; background: var(--ink); border-radius: 44px; box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); position: relative; }
+.phone::before { content: ""; position: absolute; top: 20px; left: 50%; width: 76px; height: 20px; margin-left: -38px; border-radius: 12px; background: #000; z-index: 2; }
+.screen { position: relative; width: 276px; height: 598px; border-radius: 34px; overflow: hidden; background: var(--sheet); }
+.screen iframe { position: absolute; left: 0; top: 0; width: 375px; height: 812px; border: 0; transform: scale(.736); transform-origin: 0 0; }
+.phone-cap { text-align: center; color: var(--muted); font-size: .85rem; margin-top: 10px; }
+body.only-phone .desk { display: none; }
+@media (max-width: 900px) {
+  .design { grid-template-columns: 1fr; }
+  .desk, .tabs { display: none; }
+  .phone { margin: 0 auto; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><img src="spolecne/img/logo.png" alt="VODOTOP FM s.r.o." width="544" height="130"></div>
+  <h1>VODOTOP FM · 4 návrhy webu</h1>
+  <p>Všechny čtyři návrhy mají stejné texty a fotky, liší se jen vzhledem. Vyberte ten, který vám sedí, a řekněte, co byste na něm změnili. Každý jde proklikat z počítače i z mobilu. Kalkulačka polystyrenu funguje, formulář v návrhu nic neodesílá.</p>
+  <div class="tabs" role="group" aria-label="Zobrazení">
+    <button type="button" aria-pressed="true" data-view="both">Počítač + mobil</button>
+    <button type="button" aria-pressed="false" data-view="phone">Jen mobil</button>
+  </div>
+</header>
+
+<main>
+  <section class="design" data-src="v1/">
+    <div>
+      <h2><span>1</span> · Servis</h2>
+      <p>Modrá a bílá jako na hale. Telefon je hned v úvodu velkým písmem, služby jsou modré karty přes spodek úvodní fotky a pod nimi pruh „Spěchá to?“ s číslem na jednatele.</p>
+      <p class="src">Vychází ze šablon ProHauz, Airtech a Industrie (HVAC).</p>
+      <a class="open" href="v1/" target="_blank">Otevřít celý návrh</a>
+    </div>
+  </section>
+  <section class="design" data-src="v2/">
+    <div>
+      <h2><span>2</span> · Dílna</h2>
+      <p>Tmavý grafit s červenou, úzké velké nadpisy. Úvodní fotka je šikmo uříznutá, pod ní pás s čísly a běžící pruh s obory. Služby se listují do strany šipkami.</p>
+      <p class="src">Vychází ze šablon Industrie (Engineering) a Steeler.</p>
+      <a class="open" href="v2/" target="_blank">Otevřít celý návrh</a>
+    </div>
+  </section>
+  <section class="design" data-src="v3/">
+    <div>
+      <h2><span>3</span> · Ateliér</h2>
+      <p>Světlý a klidný, jemná milimetrová mřížka v pozadí. Služby jako číslovaný seznam, rok 1994 v červeném rámečku přes fotku a mozaika fotek z areálu.</p>
+      <p class="src">Vychází ze šablon Bauhaus a Industrie (HVAC).</p>
+      <a class="open" href="v3/" target="_blank">Otevřít celý návrh</a>
+    </div>
+  </section>
+  <section class="design" data-src="v4/">
+    <div>
+      <h2><span>4</span> · Řemeslo</h2>
+      <p>Teplejší, s červenou lištou s kontakty nahoře. Fotka haly přes celou šířku, pod ní tři bílé boxy pro rodinné domy, bytovky a firmy. Uprostřed tmavý pruh s velkým telefonem.</p>
+      <p class="src">Vychází ze šablon Boldman a Airtech.</p>
+      <a class="open" href="v4/" target="_blank">Otevřít celý návrh</a>
+    </div>
+  </section>
+</main>
+
+<script>
+// Do každého návrhu doplní náhled z počítače (zmenšený) a z mobilu (375 px v telefonu).
+document.querySelectorAll(".design").forEach((design) => {
+  const src = design.dataset.src;
+  const info = design.firstElementChild;
+  info.insertAdjacentHTML("beforeend",
+    `<div class="desk"><div class="desk-bar"><i></i><i></i><i></i></div><div class="desk-view"><iframe src="${src}" title="Náhled z počítače" loading="lazy"></iframe></div></div>`);
+  design.insertAdjacentHTML("beforeend",
+    `<div><div class="phone"><div class="screen"><iframe src="${src}" title="Náhled z mobilu" loading="lazy"></iframe></div></div><p class="phone-cap">Mobil · 375 px</p></div>`);
+});
+
+function fitDesk() {
+  document.querySelectorAll(".desk-view").forEach((view) => {
+    view.firstElementChild.style.transform = `scale(${view.clientWidth / 1440})`;
+  });
+}
+window.addEventListener("resize", fitDesk);
+fitDesk();
+
+document.querySelectorAll(".tabs button").forEach((button) => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".tabs button").forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
+    document.body.classList.toggle("only-phone", button.dataset.view === "phone");
+    fitDesk();
+  });
+});
+</script>
+</body>
+</html>

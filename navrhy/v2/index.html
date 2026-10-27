@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>VODOTOP FM · Návrh 2 · Dílna</title>
+<meta name="description" content="Instalatéři, topenáři a plynaři od roku 1994. Montáž a servis kotlů, rozvody vody a plynu, revize, tepelná čerpadla. Kunčičky u Bašky, Frýdek-Místek.">
+<link rel="icon" href="../spolecne/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../spolecne/fonts/barlow-condensed.css">
+<link rel="stylesheet" href="../spolecne/fonts/barlow.css">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;overflow-x:hidden}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+h1,h2,h3,p,ul,dl,dd,figure{margin:0}
+ul{padding:0;list-style:none}
+input,select,textarea,button{font:inherit;color:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:-999px;top:8px;z-index:100;padding:10px 14px;background:#000;color:#fff}
+.skip:focus{left:8px}
+:focus-visible{outline:3px solid currentColor;outline-offset:3px}
+.ico{width:1.25em;height:1.25em;flex:none}
+.menu-btn{display:none;width:48px;height:48px;border:0;background:none;cursor:pointer;place-items:center}
+.menu-lines,.menu-lines::before,.menu-lines::after{display:block;width:22px;height:2px;background:currentColor;position:relative;transition:transform .2s}
+.menu-lines::before,.menu-lines::after{content:"";position:absolute;left:0}
+.menu-lines::before{top:-7px}.menu-lines::after{top:7px}
+.menu-open .menu-lines{background:transparent}
+.menu-open .menu-lines::before{transform:translateY(7px) rotate(45deg)}
+.menu-open .menu-lines::after{transform:translateY(-7px) rotate(-45deg)}
+.field{display:grid;gap:6px}
+.field input,.field select,.field textarea{width:100%;min-height:48px;padding:10px 12px}
+.field small{font-weight:400;opacity:.75}
+[aria-invalid=true]{outline:2px solid #c4161c;outline-offset:1px}
+.form{display:grid;gap:16px}
+.form-row{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+.form-consent{font-size:.85rem;line-height:1.5}
+.form-status:empty{display:none}
+.ftr nav a,.top a,.legal-links a{display:inline-flex;align-items:center;min-height:44px}
+.ftr nav{flex-wrap:wrap;column-gap:20px!important;row-gap:0!important}
+.calc-form{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+.field-wide{grid-column:1/-1}
+.calc-res{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.calc-res dd b{font-size:2rem;line-height:1}
+.calc-res[hidden],.calc-hint[hidden]{display:none}
+@media (max-width:640px){.form-row,.calc-form{grid-template-columns:1fr}}
+:root{--ink:#16181b;--ink2:#202328;--ink3:#2b2f35;--red:#d0262c;--red-l:#ff6b6f;--paper:#f1f0ec;--muted:#5b5f66;--line:#d9d7d1;--on-dark:#c9ccd1}
+body{font:400 1.0625rem/1.6 Barlow,system-ui,sans-serif;color:var(--ink);background:var(--paper)}
+.wrap{width:min(1280px,100% - 32px);margin-inline:auto}
+@media (min-width:768px){.wrap{width:min(1280px,100% - 80px)}}
+h1,h2,h3{font-family:"Barlow Condensed",Barlow,sans-serif;font-weight:700;text-transform:uppercase;line-height:1;letter-spacing:.005em}
+h2{font-size:clamp(2.2rem,4.6vw,3.8rem)}
+h3{font-size:1.5rem;line-height:1.1}
+.tag{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:16px}
+.tag::before{content:"";width:10px;height:10px;background:currentColor;transform:rotate(45deg)}
+.lead{color:var(--muted);max-width:58ch;margin-top:16px}
+.btn{display:inline-flex;align-items:center;gap:12px;min-height:54px;padding:0 26px;background:var(--red);color:#fff;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.95rem;text-decoration:none;border:0;cursor:pointer;clip-path:polygon(0 0,100% 0,100% 70%,calc(100% - 14px) 100%,0 100%)}
+.btn:hover{background:#a81d22}
+.btn-line{background:none;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.4);clip-path:none}
+.btn-line:hover{background:rgba(255,255,255,.08)}
+/* hlavička */
+.hdr{position:absolute;inset:0 0 auto;z-index:20;color:#fff}
+.hdr .wrap{display:flex;align-items:center;gap:36px;min-height:88px}
+.plate{background:#fff;padding:8px 12px;display:inline-flex}
+.plate img{height:34px;width:auto}
+.nav{display:flex;gap:30px;margin-left:auto;font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:.9rem}
+.nav a{text-decoration:none;padding:8px 0}
+.nav a:hover{color:var(--red-l)}
+.hdr-tel{font-weight:600;text-decoration:none;white-space:nowrap}
+/* úvod */
+.hero{position:relative;background:var(--ink);color:#fff;min-height:min(760px,100svh);display:flex;align-items:flex-end;overflow:hidden}
+.hero-photo{position:absolute;inset:0 0 0 40%;clip-path:polygon(18% 0,100% 0,100% 100%,0 100%)}
+.hero-photo img{width:100%;height:100%;object-fit:cover;filter:saturate(.75) contrast(1.05)}
+.hero-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(22,24,27,.7),rgba(22,24,27,0) 22%),linear-gradient(90deg,rgba(22,24,27,.55),rgba(22,24,27,0) 50%)}
+.hero-cut{position:absolute;inset:0 0 0 calc(40% - 8px);background:var(--red);clip-path:polygon(18% 0,100% 0,100% 100%,0 100%)}
+.hero .wrap{position:relative;padding:150px 0 72px}
+.hero-txt{max-width:620px}
+@media (min-width:1024px){.hero-txt{max-width:calc(40vw - 64px)}}
+.hero .tag{color:var(--red-l)}
+.hero h1{font-size:clamp(2.8rem,5.4vw,5.4rem)}
+.hero h1 span{display:block;color:var(--on-dark);font-size:.42em;letter-spacing:.04em;margin-top:14px}
+.hero p{color:var(--on-dark);max-width:48ch;margin-top:22px}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+/* pás s čísly */
+.proof{background:var(--ink2);color:#fff;border-top:1px solid var(--ink3)}
+.proof .pl{display:grid;grid-template-columns:repeat(4,1fr)}
+.proof div{padding:30px 24px;border-left:1px solid var(--ink3)}
+.proof div:first-child{border-left:0;padding-left:0}
+.proof b{display:block;font:700 clamp(2rem,3.6vw,3rem)/1 "Barlow Condensed",sans-serif;color:#fff}
+.proof span{color:var(--on-dark);font-size:.95rem}
+/* běžící pruh */
+.ticker{background:var(--red);color:#fff;overflow:hidden;white-space:nowrap}
+.ticker-in{display:inline-flex;animation:tick 40s linear infinite}
+.ticker span{font:700 clamp(1.4rem,2.6vw,2.1rem)/1 "Barlow Condensed",sans-serif;text-transform:uppercase;padding:18px 0;display:inline-flex;align-items:center;gap:28px;margin-right:28px}
+.ticker span::after{content:"";width:12px;height:12px;border:2px solid currentColor;transform:rotate(45deg)}
+@keyframes tick{to{transform:translateX(-50%)}}
+section{scroll-margin-top:24px}
+.sec{padding:110px 0}
+/* služby */
+.svc-head{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-end}
+.arrows{display:flex;gap:8px}
+.arrows button{width:52px;height:52px;border:1px solid var(--ink);background:none;cursor:pointer;display:grid;place-items:center}
+.arrows button:hover{background:var(--ink);color:#fff}
+.arrows .prev .ico{transform:scaleX(-1)}
+.svc{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(290px,1fr);gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;margin-top:44px;padding-bottom:12px;scrollbar-width:thin}
+.svc li{scroll-snap-align:start;background:#fff;padding:34px 28px 30px;border-top:4px solid var(--ink);display:flex;flex-direction:column;gap:14px;min-height:300px;transition:border-color .2s}
+.svc li:hover{border-color:var(--red)}
+.svc .num{font:700 1rem "Barlow Condensed",sans-serif;color:var(--muted)}
+.svc .ico{width:44px;height:44px;color:var(--red)}
+.svc p{color:var(--muted)}
+.brands{margin-top:40px;color:var(--muted);font-size:.95rem}
+.brands b{color:var(--ink);text-transform:uppercase;letter-spacing:.06em;font-size:.85rem;margin-right:8px}
+/* od roku */
+.since{background:#fff}
+.since-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.since h2 em{font-style:normal;color:var(--red)}
+.since-txt p{color:var(--muted);margin-top:14px}
+.since-photo{position:relative}
+.since-photo::before{content:"";position:absolute;inset:-18px 18px 18px -18px;border:2px solid var(--red);z-index:0}
+.since-photo img{position:relative}
+.tabs{display:flex;margin-top:28px;border-bottom:1px solid var(--line)}
+.tabs button{border:0;background:none;padding:12px 18px;font-weight:600;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected=true]{color:var(--ink);border-color:var(--red)}
+.panel{padding-top:18px}
+.panel[hidden]{display:none}
+.panel dl{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}
+.panel dt{color:var(--muted);font-size:.9rem}
+.panel dd{font-weight:600}
+/* pro koho */
+.who{margin-top:44px;border-top:1px solid var(--ink)}
+.who li{display:grid;grid-template-columns:80px 1fr 1.2fr;gap:24px;padding:28px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.who .n{font:700 2rem "Barlow Condensed",sans-serif;color:var(--red)}
+.who p{color:var(--muted)}
+.who .ex{color:var(--ink);margin-top:6px;font-size:.95rem}
+/* navíc + kalkulačka */
+.dark{background:var(--ink);color:#fff}
+.dark .lead,.dark p{color:var(--on-dark)}
+.dark .tag{color:var(--red-l)}
+.extra-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px}
+.extra ul{margin-top:32px;display:grid;gap:2px}
+.extra li{background:var(--ink2);padding:22px 24px}
+.extra li h3{font-size:1.35rem;margin-bottom:6px;color:#fff}
+.extra-photo{margin-top:24px}
+.extra-photo img{filter:saturate(.8)}
+.calc-box{background:var(--ink2);padding:40px;border-top:4px solid var(--red);align-self:start}
+.calc-box h3{font-size:2.2rem;margin-bottom:8px}
+.calc-box > p{margin-bottom:26px}
+.field span{font-weight:600;font-size:.9rem;text-transform:uppercase;letter-spacing:.06em}
+.dark .field input,.dark .field select{background:var(--ink);border:1px solid #4a4f57;color:#fff}
+.calc-out{margin-top:26px;padding-top:24px;border-top:1px solid var(--ink3);display:grid;gap:14px}
+.calc-res b{font-family:"Barlow Condensed",sans-serif;color:#fff;font-size:2.6rem!important}
+.calc-res dt{font-size:.85rem}
+.calc-note,.calc-hint{font-size:.9rem}
+.calc-cta{justify-self:start}
+/* reference */
+.refs-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:56px;margin-top:44px}
+.places{border-top:1px solid var(--ink)}
+.places li{display:grid;grid-template-columns:200px 1fr;gap:20px;padding:16px 0;border-bottom:1px solid var(--line)}
+.places b{font:700 1.25rem "Barlow Condensed",sans-serif;text-transform:uppercase}
+.places span{color:var(--muted)}
+.clients{background:var(--ink);color:#fff;padding:32px}
+.clients h3{font-size:1.4rem;margin-bottom:16px}
+.clients li{padding:9px 0;border-bottom:1px solid var(--ink3);color:var(--on-dark)}
+/* kontakt */
+.contact-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:64px;margin-top:44px}
+.cinfo{display:grid;gap:2px;align-content:start}
+.cinfo > *{background:var(--ink2);padding:22px 24px;text-decoration:none;display:block}
+.cinfo small{display:block;text-transform:uppercase;letter-spacing:.1em;font-size:.78rem;color:var(--red-l);font-weight:600}
+.cinfo b{font:700 1.6rem "Barlow Condensed",sans-serif;color:#fff}
+.cinfo .urgent{background:var(--red)}
+.cinfo .urgent small,.cinfo .urgent p{color:#fff}
+.form-box{background:#fff;color:var(--ink);padding:40px}
+.form-box h3{font-size:2rem}
+.form-box > p{color:var(--muted)!important;margin:8px 0 24px}
+.form-box .field input,.form-box .field select,.form-box .field textarea{border:1px solid #8b8f96;background:#fff;color:var(--ink)}
+.form-consent{color:var(--muted)!important}
+.form-consent a{color:var(--red)}
+.form-status{padding:12px 14px;background:var(--paper);border-left:4px solid var(--red);color:var(--ink)!important}
+/* patička */
+.ftr{background:#0f1113;color:#9aa0a8;padding:56px 0 40px;font-size:.92rem}
+.ftr .row{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center;padding-bottom:28px;border-bottom:1px solid var(--ink3)}
+.ftr nav{display:flex;gap:24px;text-transform:uppercase;letter-spacing:.08em;font-size:.85rem}
+.ftr nav a{text-decoration:none;color:#fff}
+.legal{margin-top:24px}
+.legal-links{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:10px}
+@media (max-width:1023px){
+  .nav{position:fixed;inset:0;flex-direction:column;justify-content:center;gap:8px;background:var(--ink);padding:0 32px;display:none;font-size:1.4rem}
+  .menu-open .nav{display:flex}
+  .menu-btn{display:grid;margin-left:auto;position:relative;z-index:30;color:#fff}
+  .hdr-tel{display:none}
+  .hero-photo{inset:0 0 auto 0;height:min(78vw,420px);clip-path:polygon(0 0,100% 0,100% 82%,0 100%)}
+  .hero-photo::after{background:linear-gradient(180deg,rgba(22,24,27,.3),rgba(22,24,27,.1))}
+  .hero-cut{display:none}
+  .hero{min-height:auto}
+  .hero .wrap{padding:calc(min(78vw,420px) + 8px) 0 56px}
+  .proof .pl{grid-template-columns:1fr 1fr}
+  .proof div:nth-child(3){border-left:0;padding-left:0}
+  .since-grid,.extra-grid,.refs-grid,.contact-grid{grid-template-columns:1fr;gap:44px}
+  .since-photo{order:-1;margin:18px 0 0 18px}
+}
+@media (max-width:640px){
+  .proof div{padding:22px 12px}
+  .who li{grid-template-columns:1fr;gap:6px}
+  .places li{grid-template-columns:1fr;gap:2px}
+  .panel dl{grid-template-columns:1fr}
+  .calc-box,.form-box,.clients{padding:26px 20px}
+  .sec{padding:76px 0}
+  .svc{grid-auto-columns:82%}
+  .hdr .wrap{min-height:72px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#obsah">Přeskočit na obsah</a>
+<header class="hdr"><div class="wrap">
+  <a class="plate" href="#"><img src="../spolecne/img/logo.png" alt="VODOTOP FM s.r.o." width="544" height="130"></a>
+  <nav class="nav" id="menu" aria-label="Hlavní"><a href="#sluzby">Služby</a><a href="#reference">Reference</a><a href="#firma">O firmě</a><a href="#kontakt">Kontakt</a></nav>
+  <a class="hdr-tel" href="tel:+420558440040">+420 558 440 040</a>
+  <button class="menu-btn " type="button" aria-expanded="false" aria-controls="menu"><span class="menu-lines" aria-hidden="true"></span><span class="sr">Menu</span></button>
+</div></header>
+
+<main id="obsah">
+<section class="hero">
+  <div class="hero-cut" aria-hidden="true"></div>
+  <div class="hero-photo"><img class="" src="../spolecne/img/gallery-6-1024.webp" srcset="../spolecne/img/gallery-6-400.webp 400w, ../spolecne/img/gallery-6-800.webp 800w, ../spolecne/img/gallery-6-1024.webp 1024w" sizes="(min-width:1024px) 60vw, 100vw" alt="Hala VODOTOP FM v Kunčičkách u Bašky s logem firmy" width="1024" height="768" fetchpriority="high" decoding="async"></div>
+  <div class="wrap"><div class="hero-txt">
+    <p class="tag">Kunčičky u Bašky · od roku 1994</p>
+    <h1>Voda, topení, plyn a elektro <span>pro domy, bytovky i firmy</span></h1>
+    <p>Montujeme a opravujeme rozvody vody, plynu a topení, kotle a kotelny. Děláme revize plynových a elektrických zařízení. Pro rodinné domy, bytové domy, obce i firmy z okolí Frýdku-Místku.</p>
+    <div class="hero-cta"><a class="btn" href="#kontakt">Poslat poptávku <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="btn btn-line" href="tel:+420558440040"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg> +420 558 440 040</a></div>
+  </div></div>
+</section>
+<div class="proof"><div class="wrap"><div class="pl"><div><b>1994</b><span>děláme od roku</span></div><div><b>30</b><span>lidí ve firmě</span></div><div><b>20 mil. Kč</b><span>pojištění pro případ škody na díle</span></div><div><b>0410</b><span>číslo v Cechu instalatérů ČR</span></div></div></div></div>
+<div class="ticker" aria-hidden="true"><div class="ticker-in"><span>Voda</span><span>Topení</span><span>Plyn</span><span>Elektro</span><span>Revize</span><span>Tepelná čerpadla</span><span>Kotelny nad 50 kW</span><span>Polystyren EPS</span><span>Voda</span><span>Topení</span><span>Plyn</span><span>Elektro</span><span>Revize</span><span>Tepelná čerpadla</span><span>Kotelny nad 50 kW</span><span>Polystyren EPS</span></div></div>
+
+<section class="sec" id="sluzby"><div class="wrap">
+  <div class="svc-head">
+    <div><p class="tag">Co děláme</p><h2>Co pro vás uděláme</h2><p class="lead">Instalatéra, topenáře, plynaře, elektrikáře i zedníka máme ve vlastní firmě.</p></div>
+    <div class="arrows"><button class="prev" type="button" data-scroll="-1" aria-label="Předchozí služby"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button><button type="button" data-scroll="1" aria-label="Další služby"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+  </div>
+  <ul class="svc" data-scroller tabindex="0" aria-label="Služby">
+    <li><span class="num">01</span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3.5 4.6 6 7.9 6 11a6 6 0 0 1-12 0c0-3.1 2.5-6.4 6-11z"/></svg><h3>Voda a kanalizace</h3><p>Rozvody vody a odpadů, stoupačky v bytových domech, novostavby i rekonstrukce.</p></li><li><span class="num">02</span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6v13M9 6v13M13 6v13M17 6v13M3 9h18M3 16h18"/></svg><h3>Topení a kotle</h3><p>Montáž a servis plynových kotlů a elektrokotlů, radiátory a termostatické ventily, kotelny nad 50 kW.</p></li><li><span class="num">03</span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2.4 1.2-3.8 2.5-5 .3 2 1.2 3 2.5 3 0-3-1-5 0-8z"/></svg><h3>Plyn a revize</h3><p>Plynovody od HUP po spotřebiče, výměna stoupaček, revize plynových zařízení a tlakových nádob.</p></li><li><span class="num">04</span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 5 14h6l-1 8 8-12h-6z"/></svg><h3>Elektro</h3><p>Elektroinstalace a revize elektrických zařízení, i jako součást větší zakázky.</p></li><li><span class="num">05</span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><h3>Tepelná čerpadla a solár</h3><p>Montáž tepelných čerpadel včetně projektové dokumentace a solárních systémů.</p></li><li><span class="num">06</span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="13" height="10" rx="2"/><path d="m16 11 5-3v8l-5-3z"/></svg><h3>Kamera do potrubí</h3><p>Kontrola vodovodů, kanalizace a komínů kamerou, od průměru 20 mm.</p></li>
+  </ul>
+  <p class="brands"><b>Materiály, na které jsou naši lidé proškoleni</b>COMAP, REHAU, VIEGA, REVEL, FRIATEC, GABOTHERM, SUPERSAN, TCI, KORADO, BAXI, HANSA, NOVASERVIS, RAVAK, PTÁČEK, IMI</p>
+</div></section>
+
+<section class="sec since" id="firma"><div class="wrap since-grid">
+  <div class="since-txt">
+    <p class="tag">O firmě</p>
+    <h2>Od roku 1994 <em>v Kunčičkách u Bašky</em></h2>
+    <p>Začínali jsme v roce 1994 opravami bytových rozvodů vody, plynu, topení a elektřiny. Postupně jsme se dostali i ke kotelnám a rekonstrukcím rozvodů v nemocnici ve Frýdku-Místku. Děláme i rodinné domy.</p>
+    <div class="tabs" role="tablist" aria-label="O firmě">
+      <button type="button" role="tab" id="t1" aria-selected="true" aria-controls="p1">Historie</button>
+      <button type="button" role="tab" id="t2" aria-selected="false" aria-controls="p2" tabindex="-1">Firma v číslech</button>
+    </div>
+    <div class="panel" role="tabpanel" id="p1" aria-labelledby="t1"><p>Postupně jsme přibírali lidi i řemesla. Dnes děláme vodu, topení, plyn, elektro i zednické práce, včetně revizí plynových a elektrických zařízení. Velké zakázky stavíme na klíč.</p><p>Na svařování posíláme jen lidi s platnou státní svářečskou zkouškou. Máme oprávnění na montáž kotelen nad 50 kW a pro případ škody na díle jsme pojištěni na 20 milionů korun.</p><p>Od 29. 5. 1997 jsme členy Cechu instalatérů ČR pod číslem 0410.</p></div>
+    <div class="panel" role="tabpanel" id="p2" aria-labelledby="t2" hidden><dl><div><dt>Začátek</dt><dd>1994</dd></div><div><dt>Lidí ve firmě</dt><dd>30</dd></div><div><dt>Pojištění díla</dt><dd>20 000 000 Kč</dd></div><div><dt>Člen Cechu instalatérů</dt><dd>od roku 1997</dd></div><div><dt>Kotelny</dt><dd>nad 50 kW</dd></div><div><dt>Značek kotlů v servisu</dt><dd>17</dd></div></dl></div>
+  </div>
+  <div class="since-photo"><img class="" src="../spolecne/img/gallery-5-1024.webp" srcset="../spolecne/img/gallery-5-400.webp 400w, ../spolecne/img/gallery-5-800.webp 800w, ../spolecne/img/gallery-5-1024.webp 1024w" sizes="(min-width:1024px) 45vw, 100vw" alt="Hala VODOTOP FM s modrým pruhem a logem" width="1024" height="768" loading="lazy" decoding="async"></div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <p class="tag">Zákazníci</p>
+  <h2>Pro koho pracujeme</h2>
+  <ul class="who"><li><span class="n">01</span><h3>Rodinné domy</h3><div><p>Nový kotel, rozvody při rekonstrukci, revize plynu, tepelné čerpadlo.</p><p class="ex">Například: voda, topení a odpady v rodinném domě v Morávce.</p></div></li><li><span class="n">02</span><h3>Bytové domy a SVJ</h3><div><p>Výměna stoupaček vody a plynu, radiátorů a ležatých rozvodů.</p><p class="ex">Například: plynovod od HUP po spotřebiče pro SVJ Lískovecká 2867.</p></div></li><li><span class="n">03</span><h3>Obce, školy a firmy</h3><div><p>Kotelny nad 50 kW, rekonstrukce ústředního topení, předávací stanice.</p><p class="ex">Například: rekonstrukce ÚT v blocích A–E Nemocnice ve Frýdku-Místku.</p></div></li></ul>
+</div></section>
+
+<section class="sec dark extra" id="eps"><div class="wrap extra-grid">
+  <div>
+    <p class="tag">K tomu navíc</p>
+    <h2>Z vlastní haly v Kunčičkách</h2>
+    <p class="lead">Kromě řemesel nabízíme polystyren, techniku a dopravu.</p>
+    <ul><li><h3>Polystyren EPS</h3><p>Desky EPS 50 až 150, drť a kuličky. Typy pro program Nová zelená úsporám.</p></li><li><h3>Korunkové vrtání</h3><p>Vrtáme prostupy zdí a stropů vrtačkou Hilti, průměr 50–300 mm, délka až 1,3 m.</p></li><li><h3>Lešení a doprava</h3><p>Hliníková věž do 10 m, lešení GRAF a velkoobjemová Avia s přívěsem.</p></li></ul>
+    <div class="extra-photo"><img class="" src="../spolecne/img/gallery-10-1024.webp" srcset="../spolecne/img/gallery-10-400.webp 400w, ../spolecne/img/gallery-10-800.webp 800w, ../spolecne/img/gallery-10-1024.webp 1024w" sizes="(min-width:1024px) 45vw, 100vw" alt="Nákladní vozy VODOTOP FM s polystyrenem před halou" width="1024" height="768" loading="lazy" decoding="async"></div>
+  </div>
+  <div class="calc-box">
+    <p class="tag">Kalkulačka EPS</p>
+    <h3>Spočítejte si polystyren</h3>
+    <p>Zadejte plochu a tloušťku. Spočítáme objem a počet desek 1000 × 500 mm, poptávku pak pošlete jedním kliknutím.</p>
+    <div class="calc" data-calc>
+  <div class="calc-form">
+    <label class="field"><span>Plocha (m²)</span><input id="calc-area" inputmode="decimal" autocomplete="off" placeholder="120"></label>
+    <label class="field"><span>Tloušťka (mm)</span><select id="calc-mm"><option>50</option><option>80</option><option>100</option><option>120</option><option>140</option><option selected>160</option><option>180</option><option>200</option></select></label>
+    <label class="field field-wide"><span>Typ desky</span><select id="calc-type"><option value="EPS 70F">EPS 70F – fasády, zateplení stěn</option><option value="EPS 100S">EPS 100S – ploché střechy a podlahy, stabilizovaný</option><option value="EPS 100Z">EPS 100Z – podlahy a stropy, běžné zatížení</option><option value="EPS 150Z">EPS 150Z – více zatížené podlahy</option><option value="EPS 50Z">EPS 50Z – nezatížené izolace, podkroví a stropy</option></select></label>
+  </div>
+  <div class="calc-out" aria-live="polite">
+    <p class="calc-hint" id="calc-hint">Zadejte plochu v m², například 120 nebo 12,5.</p>
+    <dl class="calc-res" id="calc-res" hidden>
+      <div><dt>Objem</dt><dd><b id="calc-vol">0</b> m³</dd></div>
+      <div><dt>Desek 1000 × 500 mm</dt><dd><b id="calc-boards">0</b> <span id="calc-boards-w">desek</span></dd></div>
+    </dl>
+    <p class="calc-note">+ 5 % na prořez. Orientační výpočet. Cenu a termín dodání vám pošleme na poptávku.</p>
+    <a class="btn calc-cta" id="calc-cta" href="#kontakt">Poptat tohle množství</a>
+  </div>
+</div>
+  </div>
+</div></section>
+
+<section class="sec" id="reference"><div class="wrap">
+  <p class="tag">Reference</p>
+  <h2>Zakázky, které jsme dělali</h2>
+  <p class="lead">Obce, kde jsme v minulosti pracovali. Podle našich referencí z let 2004–2014.</p>
+  <div class="refs-grid">
+    <ul class="places"><li><b>Frýdek-Místek</b><span>Nemocnice, DISTEP, SVJ, školy a město</span></li><li><b>Baška</b><span>Radiátory a kotle v ZŠ, rekonstrukce MŠ</span></li><li><b>Palkovice</b><span>Rekonstrukce kotelny Beskyd Agro</span></li><li><b>Frýdlant n. O.</b><span>Energetická modernizace domu</span></li><li><b>Dobrá</b><span>Příprava teplé vody v základní škole</span></li><li><b>Chlebovice</b><span>Vodovodní potrubí pro závod Hanwha</span></li><li><b>Raškovice</b><span>Plynofikace bytových domů a zdravotního střediska</span></li><li><b>Ostravice</b><span>Plynová kotelna MŠ, hotel Válcoven plechu</span></li></ul>
+    <div class="clients"><h3>Pracovali jsme mimo jiné pro</h3><ul><li>Nemocnice ve Frýdku-Místku</li><li>DISTEP a.s.</li><li>Statutární město Frýdek-Místek</li><li>Obec Baška</li><li>Obec Ostravice</li><li>Obec Raškovice</li><li>MORAVEL a.s.</li><li>Gymnázium a SPŠE Frenštát pod Radhoštěm</li><li>Základní škola Dobrá</li><li>Penzion pro seniory Frýdek-Místek</li></ul></div>
+  </div>
+</div></section>
+
+<section class="sec dark" id="kontakt"><div class="wrap">
+  <p class="tag">Kontakt</p>
+  <h2>Zavolejte, nebo napište, co potřebujete</h2>
+  <p class="lead">Do kanceláře se dovoláte v pracovní dny. Poptávku můžete napsat kdykoli, ozveme se vám.</p>
+  <div class="contact-grid">
+    <div class="cinfo">
+      <a href="tel:+420558440040"><small>Kancelář · Po–Pá 7:00–15:00</small><b>+420 558 440 040</b></a>
+      <a href="mailto:klus@vodotop-fm.cz"><small>E-mail</small><b>klus@vodotop-fm.cz</b></a>
+      <a href="https://mapy.cz/zakladni?x=18.358144&y=49.653901&z=17" target="_blank" rel="noopener"><small>Navigovat do Kunčiček</small><b>Kunčičky u Bašky 355, 739 01 Baška</b></a>
+      <div class="urgent"><small>Spěchá to? Volejte rovnou jednateli:</small><p>Ing. Boris Klus, jednatel: <a href="tel:+420602521806">+420 602 521 806</a><br>Petr Liberda, jednatel, revizní technik: <a href="tel:+420602721207">+420 602 721 207</a></p></div>
+    </div>
+    <div class="form-box"><h3>Poptávka</h3><p>Stačí jméno, telefon a pár slov. Cenu nebo termín prohlídky domluvíme po telefonu.</p><form class="form" data-navrh-form novalidate>
+  <div class="form-row">
+    <label class="field"><span>Jméno a příjmení</span><input name="jmeno" autocomplete="name" required></label>
+    <label class="field"><span>Telefon</span><input name="telefon" type="tel" autocomplete="tel" required></label>
+  </div>
+  <div class="form-row">
+    <label class="field"><span>E-mail <small>(nepovinné, pošleme na něj potvrzení)</small></span><input name="email" type="email" autocomplete="email"></label>
+    <label class="field"><span>O co jde</span><select name="typ" id="form-typ"><option value="">Vyberte</option><option>Voda a kanalizace</option><option>Topení a kotle</option><option>Plyn a revize</option><option>Elektro</option><option>Tepelné čerpadlo nebo solár</option><option>Kamera do potrubí</option><option>Rekonstrukce</option><option>Polystyren EPS</option><option>Vrtání, lešení, doprava</option><option>Něco jiného</option></select></label>
+  </div>
+  <label class="field"><span>Co potřebujete</span><textarea name="zprava" id="form-zprava" rows="4" placeholder="Například: výměna plynového kotle v rodinném domě, kotel je z roku 2005." required></textarea></label>
+  <p class="form-consent">Beru na vědomí, že údaje z poptávky použijete jen k jejímu vyřízení a smažete je nejpozději do jednoho roku, pokud nevznikne zakázka. Podrobnosti v <a href="../../site/provozovatel.html#ochrana-osobnich-udaju">zásadách ochrany osobních údajů</a>.</p>
+  <button class="btn" type="submit">Odeslat poptávku</button>
+  <p class="form-status" role="status" aria-live="polite"></p>
+</form></div>
+  </div>
+</div></section>
+</main>
+
+<footer class="ftr"><div class="wrap">
+  <div class="row"><span class="plate"><img src="../spolecne/img/logo.png" alt="VODOTOP FM" width="544" height="130" loading="lazy"></span><nav aria-label="Patička"><a href="#sluzby">Služby</a><a href="#reference">Reference</a><a href="#firma">O firmě</a><a href="#kontakt">Kontakt</a></nav></div>
+  <p class="legal">VODOTOP FM s.r.o. · Kunčičky u Bašky 355, 739 01 Baška · IČO 26823519 · DIČ CZ26823519<br>Zapsáno u Krajského soudu v Ostravě, oddíl C, vložka 26765</p>
+<p class="legal-links"><a href="../../site/provozovatel.html">Provozovatel</a> <a href="../../site/provozovatel.html#ochrana-osobnich-udaju">Ochrana osobních údajů</a> <a href="../../site/znamky.html">Oprávnění</a> <a href="../../site/provozovatel.html#cookies">Cookies</a></p>
+</div></footer>
+<script src="../spolecne/navrh.js" defer></script>
+</body>
+</html>

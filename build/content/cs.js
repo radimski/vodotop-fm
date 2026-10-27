@@ -134,7 +134,7 @@ module.exports = {
       { n: '1994', l: 'děláme od roku' },
       { n: '30', l: 'lidí ve firmě' },
       { n: '20 mil. Kč', l: 'pojištění pro případ škody na díle' },
-      { n: '0410', l: 'číslo v cechu instalatérů' },
+      { n: '0410', l: 'číslo v Cechu instalatérů ČR' },
     ],
     tradesEyebrow: 'Co děláme',
     tradesTitle: 'Služby',
@@ -187,7 +187,7 @@ module.exports = {
     extraLead: 'Kromě řemesel nabízíme polystyren, techniku a dopravu.',
     extra: [
       { h: 'Polystyren EPS', p: 'Desky EPS 50 až 150, drť a kuličky. Typy pro program Nová zelená úsporám.' },
-      { h: 'Korunkové vrtání', p: 'Prostupy zdí a stropů Hilti, průměr 50–300 mm, délka až 1,3 m.' },
+      { h: 'Korunkové vrtání', p: 'Vrtáme prostupy zdí a stropů vrtačkou Hilti, průměr 50–300 mm, délka až 1,3 m.' },
       { h: 'Lešení a doprava', p: 'Hliníková věž do 10 m, lešení GRAF a velkoobjemová Avia s přívěsem.' },
     ],
     extraAlt: 'Nákladní vozy VODOTOP FM s polystyrenem před halou',
